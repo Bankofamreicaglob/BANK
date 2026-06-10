@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Bank of America | Private Banking — John J. Irwin</title>
+  
+  <!-- Tailwind + Bootstrap (modal) + Chart.js + Font Awesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at 10% 20%, #0b1120, #030712);
+      color: #f1f5f9;
+      transition: all 0.3s ease;
+      overflow-x: hidden;
+    }
+    .light body {
+      background: radial-gradient(circle at 10% 20%, #f8fafc, #e2e8f0);
+      color: #0f172a;
+    }
+    .glass {
+      background: rgba(15, 25, 35, 0.55);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.3);
+    }
+    .light .glass {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 25px -12px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar {
+      width: 280px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      transition: width 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      z-index: 60;
+      overflow-y: auto;
+    }
+    .sidebar.collapsed { width: 88px; }
+    .sidebar.collapsed .sidebar-text,
+    .sidebar.collapsed .logo-text { display: none; }
+    .sidebar.collapsed .nav-item { justify-content: center; padding: 0.75rem 0; }
+    .sidebar.collapsed .nav-item i { margin-right: 0; font-size: 1.35rem; }
+    .main-content {
+      transition: margin-left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      margin-left: 280px;
+    }
+    .main-content.expanded { margin-left: 88px; }
+    @media (max-width: 1024px) {
+      .sidebar { transform: translateX(-100%); width: 280px; }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .main-content, .main-content.expanded { margin-left: 0 !important; }
+      .footer-fixed { left: 0 !important; }
+    }
+    .nav-item {
+      transition: all 0.2s;
+      border-radius: 1rem;
+      cursor: pointer;
+    }
+    .nav-item:hover { background: rgba(227, 24, 55, 0.2); transform: translateX(4px); }
+    .nav-item.active { background: #e31837; color: white; box-shadow: 0 6px 14px rgba(227, 24, 55, 0.4); }
+    .atm-card {
+      background: linear-gradient(138deg, #1e293b, #0f172a);
+      border-radius: 28px;
+      padding: 1.75rem;
+      box-shadow: 0 30px 40px -20px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .atm-card::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .card-chip {
+      background: linear-gradient(145deg, #dbb85c, #b28b2c);
+      width: 52px;
+      height: 40px;
+      border-radius: 12px;
+      position: relative;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.3), 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .card-chip:before {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 10px;
+      width: 32px;
+      height: 28px;
+      background: repeating-linear-gradient(45deg, #e9cf84, #e9cf84 5px, #c8a23b 5px, #c8a23b 10px);
+      border-radius: 8px;
+    }
+    .card-number {
+      font-family: 'Courier New', monospace;
+      letter-spacing: 3px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px black;
+    }
+    .card-network-icon { font-size: 2.7rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+    .mastercard-bg { background: linear-gradient(125deg, #b3122e, #6a0c1a); }
+    .premium-field {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 1rem;
+      padding: 0.75rem 1rem;
+      transition: all 0.2s;
+    }
+    .premium-field:focus {
+      outline: none;
+      border-color: #e31837;
+      box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.25);
+    }
+    .light .premium-field {
+      background: white;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+    .footer-fixed {
+      position: fixed;
+      bottom: 0;
+      left: 280px;
+      right: 0;
+      transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      z-index: 40;
+    }
+    .footer-fixed.expanded { left: 88px; }
+    .hover-lift { transition: transform 0.2s, box-shadow 0.2s; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.3); }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #1e293b; }
+    ::-webkit-scrollbar-thumb { background: #e31837; border-radius: 10px; }
+    .light ::-webkit-scrollbar-track { background: #cbd5e1; }
+    .pending-badge {
+      background: #f59e0b;
+      color: #0f172a;
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      display: inline-block;
+      margin-left: 0.5rem;
+    }
+    .transaction-pending {
+      border-left: 3px solid #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+    }
+    .bank-logo-preview {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.05);
+      padding: 0.3rem 0.8rem;
+      border-radius: 2rem;
+      margin-left: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .light .bank-logo-preview {
+      background: rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR (unchanged) -->
+  <aside id="sidebar" class="sidebar glass flex flex-col p-5 shadow-2xl">
+    <div class="flex items-center justify-between mb-8">
+      <div class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-[#e31837] rounded-xl flex items-center justify-center shadow-md"><i class="fas fa-landmark text-white text-xl"></i></div>
+        <span class="logo-text font-black text-xl tracking-tight">Bank of America</span>
+      </div>
+      <button id="toggleSidebarBtn" class="text-white/80 hover:text-white text-xl hidden lg:block"><i class="fas fa-bars"></i></button>
+      <button class="lg:hidden text-white/80" onclick="closeMobileSidebar()"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="flex-1 space-y-1.5">
+      <div onclick="switchSection('overview')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold active" data-section="overview"><i class="fas fa-chart-pie w-5"></i><span class="sidebar-text">Overview</span></div>
+      <div onclick="switchSection('transfers')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold" data-section="transfers"><i class="fas fa-exchange-alt w-5"></i><span class="sidebar-text">Transfers</span></div>
+      <div onclick="switchSection('profile')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold" data-section="profile"><i class="fas fa-user-circle w-5"></i><span class="sidebar-text">Profile</span></div>
+      <div onclick="switchSection('settings')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold" data-section="settings"><i class="fas fa-sliders-h w-5"></i><span class="sidebar-text">Settings</span></div>
+      <div class="border-t border-white/20 my-4"></div>
+      <div onclick="logout()" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-red-400 hover:bg-red-500/20"><i class="fas fa-sign-out-alt w-5"></i><span class="sidebar-text">Logout</span></div>
+    </nav>
+    <div class="pt-4 border-t border-white/20 mt-auto">
+      <button onclick="toggleTheme()" class="flex items-center gap-3 w-full hover:bg-white/10 rounded-xl px-4 py-2.5 transition"><i id="themeIcon" class="fas fa-moon w-5"></i><span id="themeText" class="sidebar-text">Light Mode</span></button>
+    </div>
+  </aside>
+
+  <div id="mobileOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50" onclick="closeMobileSidebar()"></div>
+
+  <!-- MAIN CONTENT -->
+  <main id="mainContent" class="main-content p-6 md:p-8 pb-32 pt-6">
+    
+    <!-- OVERVIEW SECTION -->
+    <div id="overview-section" class="section-content">
+      <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+        <div>
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight">Welcome, <span class="text-[#e31837]">John J. Irwin</span></h1>
+          <p class="text-white/60 text-base">Private Wealth Management · Priority Access</p>
+        </div>
+        <div class="glass px-6 py-3 rounded-2xl text-right">
+          <p class="text-xs uppercase tracking-wider text-white/50">Total Net Worth</p>
+          <h2 id="totalNetWorth" class="text-4xl md:text-5xl font-black text-[#e31837]">$47,287,501.67</h2>
+        </div>
+      </div>
+
+      <!-- ATM CARDS -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+        <div class="atm-card hover-lift">
+          <div class="flex justify-between items-start">
+            <div><div class="card-chip mb-6"></div><p class="text-white/50 text-xs uppercase tracking-wider">Platinum Private</p><div class="card-number text-white text-2xl mt-2">4242 4242 4242 8102</div></div>
+            <i class="fab fa-cc-visa card-network-icon text-white"></i>
+          </div>
+          <div class="mt-8 flex justify-between items-end">
+            <div><p class="text-white/50 text-xs">CARDHOLDER</p><p class="text-white font-bold text-lg tracking-wide">JOHN J. IRWIN</p><p class="text-white/40 text-xs">VALID 09/29</p></div>
+            <div class="flex gap-1"><div class="w-8 h-8 bg-white/20 rounded-full"></div><div class="w-8 h-8 bg-white/20 rounded-full -ml-3"></div></div>
+          </div>
+        </div>
+        <div class="atm-card mastercard-bg hover-lift relative">
+          <div class="flex justify-between items-start">
+            <div><div class="card-chip mb-6"></div><p class="text-white/70 text-xs uppercase tracking-wider">World Elite • Black</p><div class="card-number text-white text-2xl mt-2">5555 5555 5555 4903</div></div>
+            <i class="fab fa-cc-mastercard card-network-icon text-white"></i>
+          </div>
+          <div class="mt-8 flex justify-between items-end">
+            <div><p class="text-white/60 text-xs">CARDHOLDER</p><p class="text-white font-bold text-lg">JOHN J. IRWIN</p><p class="text-white/50 text-xs">VALID 12/28</p></div>
+            <div class="flex items-center gap-1"><div class="w-8 h-8 bg-white/30 rounded-full"></div><div class="w-8 h-8 bg-white/30 rounded-full -ml-3"></div></div>
+          </div>
+          <div class="absolute bottom-3 right-4"><i class="fas fa-wifi text-white/30 text-xl"></i></div>
+        </div>
+      </div>
+
+      <!-- ACCOUNT CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="glass rounded-2xl p-6 hover-lift"><i class="fas fa-piggy-bank text-3xl text-emerald-400 mb-3"></i><p class="text-white/60 text-sm">Savings Account</p><p id="savingsBalance" class="text-3xl font-bold mt-1">$28,372,501.00</p><p class="text-emerald-400 text-xs mt-2">4.85% APY · High Yield</p></div>
+        <div class="glass rounded-2xl p-6 hover-lift"><i class="fas fa-wallet text-3xl text-blue-400 mb-3"></i><p class="text-white/60 text-sm">Checking Account</p><p id="checkingBalance" class="text-3xl font-bold mt-1">$18,915,000.67</p><p class="text-white/40 text-xs mt-2">No fees · Unlimited transactions</p></div>
+        <div class="glass rounded-2xl p-6 hover-lift"><i class="fas fa-chart-line text-3xl text-violet-400 mb-3"></i><p class="text-white/60 text-sm">Portfolio ROI (12M)</p><p id="roiValue" class="text-4xl font-bold text-emerald-400 mt-1">+14.2%</p><p class="text-white/40 text-xs">Outperforming S&P 500</p></div>
+      </div>
+
+      <!-- CHARTS + ACTIVITY -->
+      <div class="grid grid-cols-12 gap-6">
+        <div class="col-span-12 lg:col-span-7 glass rounded-2xl p-6"><h4 class="font-bold text-xl mb-4">Wealth Evolution</h4><canvas id="wealthChart" height="140"></canvas></div>
+        <div class="col-span-12 lg:col-span-5 glass rounded-2xl p-6"><h4 class="font-bold text-xl mb-4 flex justify-between">Recent Transactions <i class="fas fa-history text-white/40"></i></h4><div id="recentTransactionsList" class="space-y-3 max-h-64 overflow-y-auto pr-1"></div></div>
+      </div>
+    </div>
+
+    <!-- TRANSFERS SECTION (with dynamic bank lookup based on routing number) -->
+    <div id="transfers-section" class="section-content hidden">
+      <h2 class="text-3xl font-bold mb-6">Secure Transfer · Domestic & International</h2>
+      <div class="glass rounded-2xl p-6 md:p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-5">
+          <div class="lg:col-span-2"><h3 class="font-bold text-lg border-l-4 border-[#e31837] pl-3">📌 Sender Information</h3></div>
+          <div><label class="block text-sm font-semibold mb-1">Full Name (as on account)</label><input type="text" id="senderFullName" class="premium-field w-full" value="John J. Irwin"></div>
+          <div><label class="block text-sm font-semibold mb-1">Routing Number (ABA)</label><input type="text" id="senderRouting" class="premium-field w-full" value="021000322"></div>
+          <div><label class="block text-sm font-semibold mb-1">Account Number</label><input type="text" id="senderAccount" class="premium-field w-full" value="****8102"></div>
+          <div><label class="block text-sm font-semibold mb-1">Billing Address</label><input type="text" id="senderAddress" class="premium-field w-full" value="100 N Tryon St, Charlotte, NC 28255"></div>
+          <div><label class="block text-sm font-semibold mb-1">Phone Number</label><input type="tel" id="senderPhone" class="premium-field w-full" value="+15096164403"></div>
+          <div><label class="block text-sm font-semibold mb-1">Identity Verification (Online Password)</label><input type="password" id="identityCode" class="premium-field w-full" placeholder="SecurePass123"></div>
+
+          <div class="lg:col-span-2 mt-2"><h3 class="font-bold text-lg border-l-4 border-[#e31837] pl-3">👤 Recipient (Payee) Information</h3></div>
+          <div><label class="block text-sm font-semibold mb-1">Beneficiary Full Name *</label><input type="text" id="beneficiaryName" class="premium-field w-full" placeholder="Required"></div>
+          <div><label class="block text-sm font-semibold mb-1">Beneficiary Address</label><input type="text" id="beneficiaryAddress" class="premium-field w-full"></div>
+          <div><label class="block text-sm font-semibold mb-1">Account Type</label><select id="recipientAccType" class="premium-field w-full"><option>Checking</option><option>Savings</option></select></div>
+          <!-- REORDERED: Routing number BEFORE Bank Name -->
+          <div><label class="block text-sm font-semibold mb-1">ABA/Routing Number (Recipient) *</label>
+            <input type="text" id="recipientRouting" class="premium-field w-full" placeholder="e.g., 021000021" oninput="lookupBankByRouting(this.value)">
+          </div>
+          <div id="bankNameContainer" class="relative">
+            <label class="block text-sm font-semibold mb-1">Bank Name *</label>
+            <div class="flex items-center gap-2">
+              <input type="text" id="recipientBank" class="premium-field w-full" placeholder="Will auto-populate from routing number" readonly style="background: rgba(255,255,255,0.03); cursor: default;">
+              <div id="bankLogoPreview" class="bank-logo-preview hidden"></div>
+            </div>
+            <p id="routingFeedback" class="text-xs mt-1 text-amber-400/70 hidden"></p>
+          </div>
+          <div><label class="block text-sm font-semibold mb-1">Recipient Account Number *</label><input type="text" id="recipientAccount" class="premium-field w-full" placeholder="Required"></div>
+
+          <div class="lg:col-span-2 mt-2"><h3 class="font-bold text-lg border-l-4 border-[#e31837] pl-3">💸 Transfer Details</h3></div>
+          <div><label class="block text-sm font-semibold mb-1">Amount (USD) *</label><input type="number" id="transferAmount" class="premium-field w-full" step="0.01" placeholder="0.00"></div>
+          <div><label class="block text-sm font-semibold mb-1">Processing Date</label><input type="date" id="transferDate" class="premium-field w-full" value="2026-06-20"></div>
+          <div class="lg:col-span-2"><label class="block text-sm font-semibold mb-1">Purpose / Memo</label><textarea id="purposeMemo" rows="2" class="premium-field w-full"></textarea></div>
+          <div><label class="block text-sm font-semibold mb-1">SWIFT/BIC Code (Optional)</label><input type="text" id="swiftCode" class="premium-field w-full" placeholder="BOFAUS3N"></div>
+          <div><label class="block text-sm font-semibold mb-1">IBAN (Optional)</label><input type="text" id="ibanCode" class="premium-field w-full"></div>
+          <div><label class="block text-sm font-semibold mb-1">Sort Code (Optional)</label><input type="text" id="sortCode" class="premium-field w-full"></div>
+        </div>
+        <button onclick="reviewTransfer()" class="mt-8 w-full bg-[#e31837] hover:bg-[#b0102a] py-3.5 rounded-xl font-bold text-lg transition shadow-lg">Review Transfer & Verify Identity →</button>
+      </div>
+      <div class="mt-6 glass rounded-2xl p-5"><h4 class="font-bold mb-2">Quick Beneficiaries</h4><div class="flex flex-wrap gap-2"><button class="bg-white/10 rounded-full px-4 py-1.5 text-sm hover:bg-white/20" onclick="fillBeneficiary('Irwin Foundation','1234 Park Ave','Chase','021000021','8823746')">Irwin Foundation</button><button class="bg-white/10 rounded-full px-4 py-1.5 text-sm hover:bg-white/20" onclick="fillBeneficiary('Sarah Chen','22 Wall Street','Wells Fargo','121000248','98450012')">Sarah Chen</button></div></div>
+    </div>
+
+    <!-- PROFILE & SETTINGS -->
+    <div id="profile-section" class="section-content hidden"><div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><div class="glass rounded-2xl p-8"><div class="flex items-center gap-5 mb-6"><div class="w-20 h-20 bg-[#e31837] rounded-2xl flex items-center justify-center text-3xl font-bold shadow-lg">JI</div><div><h3 class="text-2xl font-bold">John J. Irwin</h3><p class="text-white/60">Private Wealth · Tier 7 Concierge</p></div></div><div class="space-y-4"><div><i class="fas fa-envelope w-6 text-[#e31837]"></i> kartmario800@gmail.com</div><div><i class="fas fa-phone-alt w-6 text-[#e31837]"></i> +1 (582)2896958</div><div><i class="fas fa-map-marker-alt w-6 text-[#e31837]"></i>27 Malone Road</div><div><i class="fas fa-calendar-alt w-6 text-[#e31837]"></i> Member since 2003</div></div></div><div class="glass rounded-2xl p-8"><h4 class="font-bold text-xl mb-4">Linked Accounts & Cards</h4><ul class="space-y-3"><li class="flex justify-between"><span>Visa Infinite Private</span><span class="text-white/70">•••• 8102</span></li><li class="flex justify-between"><span>Mastercard World Elite</span><span class="text-white/70">•••• 4903</span></li><li class="flex justify-between"><span>High Yield Savings</span><span class="text-white/70">#8921-0034</span></li></ul></div></div></div>
+    <div id="settings-section" class="section-content hidden"><div class="glass rounded-2xl p-8 max-w-2xl"><div class="space-y-6"><div class="flex justify-between items-center"><div><span class="font-semibold">Two-Factor Authentication</span><p class="text-sm text-white/50">Add extra layer of security</p></div><button class="bg-[#e31837] px-4 py-2 rounded-xl text-sm">Enable</button></div><div class="flex justify-between items-center"><div><span class="font-semibold">Notification Preferences</span><p class="text-sm text-white/50">Email & SMS alerts</p></div><button class="bg-white/10 px-4 py-2 rounded-xl text-sm">Configure</button></div><div class="flex justify-between items-center"><div><span class="font-semibold">Change Password</span><p class="text-sm text-white/50">Update your master password</p></div><button class="bg-white/10 px-4 py-2 rounded-xl text-sm">Update</button></div></div></div></div>
+  </main>
+
+  <footer id="footer" class="footer-fixed glass border-t border-white/15 py-4 px-6 text-sm backdrop-blur-md">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-3">
+      <div class="flex gap-5 text-white/80"><a href="#" class="hover:text-[#e31837]"><i class="fab fa-twitter"></i> Twitter</a><a href="#" class="hover:text-[#e31837]"><i class="fab fa-linkedin"></i> LinkedIn</a><a href="#" class="hover:text-[#e31837]"><i class="fab fa-instagram"></i> Instagram</a><a href="#" class="hover:text-[#e31837]"><i class="fas fa-headset"></i> Support</a></div>
+      <div class="flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full"><i class="fas fa-phone-alt text-[#e31837]"></i><span class="font-mono font-bold">+1 509 616 4403</span><span class="text-white/50 text-xs hidden sm:inline">Private Banking Hotline</span></div>
+      <div class="text-white/50 text-xs">© 2026 Bank of America Corp. FDIC Insured</div>
+    </div>
+  </footer>
+
+  <!-- MODAL & TOAST -->
+  <div class="modal fade" id="transferModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content glass border-0 text-white"><div class="modal-header border-0"><h5 class="modal-title">🔐 Confirm & Submit Transfer</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body max-h-96 overflow-y-auto"><div id="confirmDetails" class="space-y-2 text-sm"></div></div><div class="modal-footer border-0"><button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button id="confirmTransferBtn" class="btn btn-warning text-dark fw-bold">Submit for Approval</button></div></div></div></div>
+  <div id="toastMsg" class="fixed bottom-28 right-6 z-50 hidden glass px-5 py-3 rounded-xl shadow-2xl border-l-4 border-[#e31837]"></div>
+
+  <script>
+    // ---------- BANK LOOKUP (premium realistic banking logos) ----------
+    const bankDatabase = {
+      "021000021": { name: "JPMorgan Chase Bank", icon: "fa-building-columns", color: "#1e3a8a", logoText: "Chase" },
+      "121000248": { name: "Wells Fargo Bank", icon: "fa-building", color: "#b91c1c", logoText: "Wells Fargo" },
+      "021000322": { name: "Bank of America", icon: "fa-landmark", color: "#e31837", logoText: "BofA" },
+      "026009593": { name: "Citibank N.A.", icon: "fa-university", color: "#0e4d6e", logoText: "Citi" },
+      "071000013": { name: "PNC Bank", icon: "fa-piggy-bank", color: "#f7b32b", logoText: "PNC" },
+      "122105278": { name: "U.S. Bank", icon: "fa-flag-checkered", color: "#004b8d", logoText: "US Bank" },
+      "061000104": { name: "SunTrust (Truist)", icon: "fa-tree", color: "#00857c", logoText: "Truist" }
+    };
+    
+    function lookupBankByRouting(routingNumber) {
+      const bankField = document.getElementById('recipientBank');
+      const logoDiv = document.getElementById('bankLogoPreview');
+      const feedback = document.getElementById('routingFeedback');
+      if (!routingNumber || routingNumber.trim() === "") {
+        bankField.value = "";
+        logoDiv.classList.add('hidden');
+        feedback.classList.add('hidden');
+        return;
+      }
+      const bankInfo = bankDatabase[routingNumber.trim()];
+      if (bankInfo) {
+        bankField.value = bankInfo.name;
+        // Premium realistic logo display
+        logoDiv.innerHTML = `<i class="fas ${bankInfo.icon}" style="color: ${bankInfo.color};"></i><span class="font-bold">${bankInfo.logoText}</span><span class="text-xs opacity-75">✓ verified</span>`;
+        logoDiv.classList.remove('hidden');
+        feedback.classList.add('hidden');
+        // Add subtle success visual effect
+        bankField.style.borderColor = "#10b981";
+      } else {
+        bankField.value = "";
+        logoDiv.classList.add('hidden');
+        feedback.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Routing number not recognized. Please enter bank name manually.`;
+        feedback.classList.remove('hidden');
+        bankField.style.borderColor = "#f59e0b";
+        // Allow manual entry if routing not found: we remove readonly temporarily? For security we keep readonly but user can't set bank.
+        // Better to let user override: we could make it editable but requirement says populated. We'll keep readonly and show error.
+      }
+    }
+    
+    // Override fillBeneficiary to also trigger bank lookup after setting routing
+    function fillBeneficiary(name, addr, bank, routing, acc) {
+      document.getElementById('beneficiaryName').value = name;
+      document.getElementById('beneficiaryAddress').value = addr;
+      document.getElementById('recipientRouting').value = routing;
+      document.getElementById('recipientAccount').value = acc;
+      // Manually call lookup
+      lookupBankByRouting(routing);
+      // Also ensure bank name matches the lookup result
+      // (bank param is fallback but we use routing mapping)
+    }
+    
+    // ---------- BALANCES & PENDING SIMULATION (unchanged logic) ----------
+    let currentSavings = 28372501.00;
+    let currentChecking = 18915000.67;
+    let totalNetWorth = currentSavings + currentChecking;
+    const ROI_PERCENT = 14.2;
+    
+    let transactionHistory = [
+      {date:"Jun 10", desc:"Dividend Payout - AAPL", amount:189000, type:"credit", status:"completed"},
+      {date:"Jun 8", desc:"Wire to Irwin Foundation", amount:250000, type:"debit", status:"completed"},
+      {date:"Jun 5", desc:"Real Estate Dividend", amount:42500, type:"credit", status:"completed"},
+      {date:"Jun 1", desc:"Private Jet Lease", amount:128500, type:"debit", status:"completed"},
+      {date:"May 28", desc:"Advisory Fee Credit", amount:75000, type:"credit", status:"completed"}
+    ];
+    
+    let wealthDataPoints = [38700000, 40200000, 41850000, 43520000, 45200000, totalNetWorth];
+    let wealthChartInstance = null;
+    
+    function formatMoney(v){ return "$"+v.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}); }
+    
+    function refreshDashboard() {
+      document.getElementById('totalNetWorth').innerText = formatMoney(totalNetWorth);
+      document.getElementById('savingsBalance').innerText = formatMoney(currentSavings);
+      document.getElementById('checkingBalance').innerText = formatMoney(currentChecking);
+      document.getElementById('roiValue').innerHTML = `+${ROI_PERCENT}%`;
+      const container = document.getElementById('recentTransactionsList');
+      if(container) {
+        container.innerHTML = transactionHistory.slice(0,7).map(t => {
+          const pendingBadge = t.status === 'pending' ? '<span class="pending-badge"><i class="fas fa-clock mr-1"></i>Pending</span>' : '';
+          const borderClass = t.status === 'pending' ? 'transaction-pending' : '';
+          return `<div class="flex justify-between items-center p-2 glass rounded-xl ${borderClass}"><div><span class="font-semibold">${t.desc}</span>${pendingBadge}<p class="text-xs opacity-60">${t.date}</p></div><div class="font-bold ${t.type==='credit'?'text-emerald-400':'text-red-400'}">${t.type==='credit'?'+':'-'} ${formatMoney(Math.abs(t.amount))}</div></div>`;
+        }).join('');
+      }
+      if(wealthChartInstance) wealthChartInstance.destroy();
+      const ctx = document.getElementById('wealthChart').getContext('2d');
+      wealthChartInstance = new Chart(ctx, {
+        type:'line',
+        data:{ labels:['Jan','Feb','Mar','Apr','May','Jun'], datasets:[{ label:'Net Worth', data:wealthDataPoints, borderColor:'#e31837', borderWidth:4, tension:0.3, fill:false, pointBackgroundColor:'#e31837' }] },
+        options:{ responsive:true, plugins:{ legend:{ labels:{ color:'#cbd5e1' } } }, scales:{ y:{ ticks:{ callback:v=>'$'+(v/1e6).toFixed(0)+'M', color:'#94a3b8' } } } }
+      });
+    }
+    
+    function addPendingTransaction(amount, beneficiary, memo, dateStr) {
+      const displayDate = dateStr ? dateStr : new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      const description = `Pending transfer to ${beneficiary}` + (memo ? ` (${memo})` : '');
+      transactionHistory.unshift({ date: displayDate, desc: description, amount: amount, type: "debit", status: "pending" });
+      if(transactionHistory.length > 10) transactionHistory.pop();
+      refreshDashboard();
+    }
+    
+    function showToast(msg, type){ 
+       const t=document.getElementById('toastMsg'); 
+      t.innerHTML=`<i class="fas ${type==='error'?'fa-exclamation-circle':'fa-info-circle'} mr-2"></i> ${msg}`; 
+      t.classList.remove('hidden'); 
+      setTimeout(()=>t.classList.add('hidden'),5000); 
+    }
+    
+    let pendingTransferData = null;
+    function reviewTransfer(){
+      const identity = document.getElementById('identityCode').value;
+      if(identity !== "SecurePass123"){ showToast("Identity verification failed. Demo password: SecurePass123",'error'); return; }
+      
+      const amount = parseFloat(document.getElementById('transferAmount').value);
+      const beneficiaryName = document.getElementById('beneficiaryName').value.trim();
+      const recipientBank = document.getElementById('recipientBank').value.trim();
+      const recipientRouting = document.getElementById('recipientRouting').value.trim();
+      const recipientAccount = document.getElementById('recipientAccount').value.trim();
+      
+      if(isNaN(amount) || amount <= 0){ showToast("Enter a valid positive amount.",'error'); return; }
+      if(!beneficiaryName){ showToast("Beneficiary full name is required.",'error'); return; }
+      if(!recipientBank){ showToast("Bank name is required (auto-filled if routing valid).",'error'); return; }
+      if(!recipientRouting){ showToast("Recipient routing number is required.",'error'); return; }
+      if(!recipientAccount){ showToast("Recipient account number is required.",'error'); return; }
+      if(amount > currentChecking){ showToast(`Insufficient funds. Your checking balance is ${formatMoney(currentChecking)}`, 'error'); return; }
+      
+      const memo = document.getElementById('purposeMemo').value || "No reference";
+      const transferDate = document.getElementById('transferDate').value || "Today";
+      
+      pendingTransferData = { amount, beneficiaryName, recipientBank, recipientRouting, recipientAccount, memo, transferDate };
+      
+      const confirmDiv = document.getElementById('confirmDetails');
+      confirmDiv.innerHTML = `
+        <div class="bg-yellow-500/20 p-3 rounded-xl border border-yellow-500/40"><i class="fas fa-shield-alt mr-2"></i><span class="font-bold">⚠️ PENDING APPROVAL SIMULATION</span></div>
+        <div><span class="text-white/60">To:</span> <strong>${beneficiaryName}</strong> (${recipientBank})</div>
+        <div><span class="text-white/60">Routing/Account:</span> ${recipientRouting} / ${recipientAccount}</div>
+        <div><span class="text-white/60">Amount:</span> <span class="text-yellow-400 font-black text-xl">${formatMoney(amount)}</span></div>
+        <div><span class="text-white/60">Date:</span> ${transferDate}</div>
+        <div><span class="text-white/60">Memo:</span> ${memo}</div>
+        <div class="bg-white/5 p-2 rounded-lg mt-2 text-sm"><i class="fas fa-headset text-[#e31837] mr-2"></i> This transfer will be marked as PENDING and will require verification by Private Banking Customer Care at <span class="font-mono">+1 509 616 4403</span> before execution.</div>
+      `;
+      const modal = new bootstrap.Modal(document.getElementById('transferModal'));
+      modal.show();
+    }
+    
+    function bindConfirmTransfer(){
+      const btn = document.getElementById('confirmTransferBtn');
+      btn.onclick = () => {
+        if(pendingTransferData){
+          const { amount, beneficiaryName, memo, transferDate } = pendingTransferData;
+          addPendingTransaction(amount, beneficiaryName, memo, transferDate);
+          showToast(`⏳ Transfer of ${formatMoney(amount)} to ${beneficiaryName} is PENDING. Please contact Private Banking Hotline (+1 509 616 4403) to complete verification.`, 'info');
+          document.getElementById('transferAmount').value = '';
+          pendingTransferData = null;
+          const modalEl = document.getElementById('transferModal');
+          const modal = bootstrap.Modal.getInstance(modalEl);
+          if(modal) modal.hide();
+          switchSection('overview');
+        } else {
+          showToast("Transfer data expired, please re-enter details.", 'error');
+        }
+      };
+    }
+    
+    // Switch section, theme, sidebar, etc.
+    function switchSection(s){
+      document.querySelectorAll('.section-content').forEach(el=>el.classList.add('hidden'));
+      document.getElementById(`${s}-section`).classList.remove('hidden');
+      document.querySelectorAll('.nav-item').forEach(item=>item.classList.remove('active'));
+      document.querySelector(`.nav-item[data-section="${s}"]`).classList.add('active');
+      if(s==='overview' && wealthChartInstance) wealthChartInstance.update();
+    }
+    function toggleTheme(){
+      document.documentElement.classList.toggle('light');
+      const icon=document.getElementById('themeIcon'),text=document.getElementById('themeText');
+      if(document.documentElement.classList.contains('light')){ icon.className='fas fa-sun'; text.innerText='Dark Mode'; }
+      else{ icon.className='fas fa-moon'; text.innerText='Light Mode'; }
+    }
+    function logout(){ alert("Securely logged out. (Demo)"); window.location.reload(); }
+    
+    let sidebarCollapsed = false;
+    const sidebar = document.getElementById('sidebar'), main = document.getElementById('mainContent'), footer = document.getElementById('footer');
+    const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+    if(toggleSidebarBtn){
+      toggleSidebarBtn.onclick = () => {
+        sidebarCollapsed = !sidebarCollapsed;
+        if(sidebarCollapsed){ sidebar.classList.add('collapsed'); main.classList.add('expanded'); footer.classList.add('expanded'); }
+        else{ sidebar.classList.remove('collapsed'); main.classList.remove('expanded'); footer.classList.remove('expanded'); }
+      };
+    }
+    function openMobileSidebar(){ document.getElementById('sidebar').classList.add('mobile-open'); document.getElementById('mobileOverlay').classList.remove('hidden'); }
+    function closeMobileSidebar(){ document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('mobileOverlay').classList.add('hidden'); }
+    
+    window.onload = () => {
+      refreshDashboard();
+      switchSection('overview');
+      bindConfirmTransfer();
+      const mobileBtn = document.createElement('button');
+      mobileBtn.id = 'mobileMenuBtn';
+      mobileBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+      mobileBtn.className = 'lg:hidden fixed top-4 left-4 z-50 glass p-2 rounded-xl shadow-lg';
+      mobileBtn.onclick = openMobileSidebar;
+      document.body.appendChild(mobileBtn);
+    };
+  </script>
+  <!-- Tawk.to live chat -->
+  <script type="text/javascript">var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date(); Tawk_API.visitor={name:"John Irwin",email:"john.irwin@private.com"};(function(){ var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0]; s1.async=true; s1.src='https://embed.tawk.to/6a261f7352a4351c2dc5cc5f/1jqielnhu'; s1.charset='UTF-8'; s1.setAttribute('crossorigin','*'); s0.parentNode.insertBefore(s1,s0); })();</script>
+</body>
+</html>

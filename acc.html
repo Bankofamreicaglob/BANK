@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Bank of America • Private Banking | Elevate</title>
+  
+  <!-- Favicon (BOA signature) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23D52B1E'/%3E%3Cstop offset='100%25' stop-color='%238B1A10'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3Ctext x='50' y='72' font-size='58' text-anchor='middle' fill='%23FFFFFF' font-family='Georgia, serif' font-weight='800'%3EB%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23D52B1E' rx='24'/%3E%3Ctext x='50' y='72' font-size='58' text-anchor='middle' fill='%23FFFFFF' font-family='Georgia, serif' font-weight='800'%3EB%3C/text%3E%3C/svg%3E">
+  
+  <!-- Tailwind + Bootstrap (compatible) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: radial-gradient(circle at 10% 20%, #0c0c1d, #03030a);
+      transition: background 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      min-height: 100vh;
+    }
+    
+    /* Light theme background */
+    body.light {
+      background: radial-gradient(circle at 30% 10%, #eef2ff, #d9e2ef);
+    }
+    
+    /* Premium glassmorphism */
+    .glass {
+      background: rgba(15, 25, 35, 0.45);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    body.light .glass {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Bank cards */
+    .bank-card {
+      background: linear-gradient(135deg, rgba(30, 40, 55, 0.9), rgba(20, 28, 40, 0.85));
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,240,0.25);
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+    }
+    .bank-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(255,80,80,0.5);
+    }
+    body.light .bank-card {
+      background: linear-gradient(135deg, rgba(245, 248, 255, 0.95), rgba(235, 240, 255, 0.9));
+      border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 15px 25px -8px rgba(0,0,0,0.1);
+    }
+    
+    .card-chip {
+      width: 42px;
+      height: 34px;
+      background: linear-gradient(145deg, #e5b851, #d4a13a);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-chip:after { content: "💳"; font-size: 18px; opacity: 0.8; }
+    
+    /* Sidebar & navigation */
+    .sidebar {
+      transition: transform 0.3s ease-in-out;
+      z-index: 1000;
+    }
+    .nav-link {
+      transition: all 0.25s;
+      border-radius: 60px;
+    }
+    .nav-link.active {
+      background: linear-gradient(95deg, #e31837, #c01230);
+      box-shadow: 0 8px 20px rgba(227,24,55,0.3);
+      color: white;
+    }
+    body.light .nav-link.active {
+      color: white;
+    }
+    
+    /* Custom scroll */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #e31837; border-radius: 10px; }
+    
+    /* Modal glass */
+    .modal-content {
+      background: rgba(20, 28, 38, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 32px;
+    }
+    body.light .modal-content {
+      background: rgba(250, 250, 255, 0.95);
+      color: #111;
+    }
+    
+    /* Preloader */
+    .preloader-boa {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #02070F;
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 2rem;
+      transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    body.light .preloader-boa {
+      background: #FFFFFF;
+    }
+    .preloader-logo {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, #D52B1E, #8B1A10);
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse-ring 1.5s ease-in-out infinite;
+    }
+    .preloader-logo span { font-size: 68px; font-weight: 800; color: white; font-family: Georgia, serif; }
+    @keyframes pulse-ring {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(213,43,30,0.7); }
+      50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(213,43,30,0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(213,43,30,0); }
+    }
+    .preloader-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      letter-spacing: 8px;
+      background: linear-gradient(135deg, #D52B1E, #C7A038, #D52B1E);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 2s linear infinite;
+    }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    .preloader-progress {
+      width: 280px;
+      height: 2px;
+      background: rgba(199,160,56,0.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .preloader-progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #D52B1E, #C7A038);
+      animation: progressLoad 2s ease-out forwards;
+    }
+    @keyframes progressLoad {
+      0% { width: 0%; } 20% { width: 15%; } 40% { width: 35%; } 60% { width: 65%; } 80% { width: 85%; } 100% { width: 100%; }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); width: 85%; }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0 !important; padding: 1.25rem; padding-top: 5rem; }
+      .preloader-text { font-size: 1.2rem; letter-spacing: 4px; }
+      .preloader-logo { width: 80px; height: 80px; }
+      .preloader-logo span { font-size: 48px; }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .main-content { margin-left: 280px; padding: 2rem; }
+    }
+    .fade-in-up { animation: fadeUp 0.5s ease-out; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    button:active { transform: scale(0.97); transition: 0.1s; }
+  </style>
+</head>
+<body class="text-white antialiased">
+
+  <!-- PREMIUM PRELOADER -->
+  <div id="preloader" class="preloader-boa">
+    <div class="preloader-logo"><span>B</span></div>
+    <div class="preloader-text">BANK OF AMERICA</div>
+    <div class="text-xs tracking-[0.3em] text-slate-400">PRIVATE BANKING · EST. 1892</div>
+    <div class="preloader-progress"><div class="preloader-progress-fill"></div></div>
+  </div>
+
+  <!-- Mobile Header -->
+  <div class="md:hidden fixed top-0 left-0 right-0 z-50 glass px-5 py-4 flex items-center justify-between border-b border-white/20 backdrop-blur-xl">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg">BOA</div>
+      <div class="font-bold text-xl tracking-tight">Bank of America</div>
+    </div>
+    <button onclick="toggleMobileSidebar()" class="text-2xl p-2 rounded-full bg-white/10"><i class="fas fa-bars"></i></button>
+  </div>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-80 glass p-7 flex flex-col z-[60] md:translate-x-0 shadow-2xl border-r border-white/10">
+    <div class="flex items-center gap-4 mb-12 md:mt-0 mt-16">
+      <div class="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center text-2xl font-black shadow-md">B</div>
+      <div class="font-black text-2xl tracking-tighter bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">Bank of America</div>
+    </div>
+    <div class="space-y-2 flex-1">
+      <a href="#" onclick="navigateTo('overview'); if(window.innerWidth<768) toggleMobileSidebar();" class="nav-link active flex items-center gap-4 px-5 py-3.5 text-base font-semibold rounded-2xl" id="nav-overview"><i class="fas fa-home w-6"></i><span>Overview</span></a>
+      <a href="#" onclick="navigateTo('accounts'); if(window.innerWidth<768) toggleMobileSidebar();" class="nav-link flex items-center gap-4 px-5 py-3.5 text-base font-semibold rounded-2xl" id="nav-accounts"><i class="fas fa-credit-card w-6"></i><span>Accounts</span></a>
+      <a href="#" onclick="navigateTo('investments'); if(window.innerWidth<768) toggleMobileSidebar();" class="nav-link flex items-center gap-4 px-5 py-3.5 text-base font-semibold rounded-2xl" id="nav-investments"><i class="fas fa-chart-simple w-6"></i><span>Investments</span></a>
+      <a href="#" onclick="navigateTo('transfers'); if(window.innerWidth<768) toggleMobileSidebar();" class="nav-link flex items-center gap-4 px-5 py-3.5 text-base font-semibold rounded-2xl" id="nav-transfers"><i class="fas fa-arrow-right-arrow-left w-6"></i><span>Transfers</span></a>
+      <a href="#" onclick="navigateTo('cards'); if(window.innerWidth<768) toggleMobileSidebar();" class="nav-link flex items-center gap-4 px-5 py-3.5 text-base font-semibold rounded-2xl" id="nav-cards"><i class="fas fa-id-card w-6"></i><span>Cards</span></a>
+    </div>
+    <div class="pt-8 border-t border-white/15 mt-4">
+      <div onclick="toggleTheme(); if(window.innerWidth<768) toggleMobileSidebar()" class="flex items-center gap-3 px-5 py-3.5 cursor-pointer hover:bg-white/10 rounded-2xl transition">
+        <i class="fas fa-moon" id="theme-icon"></i>
+        <span id="theme-text">Light Mode</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content ml-0 md:ml-80 p-6 md:p-8 lg:p-10 min-h-screen transition-all duration-300">
+    <!-- Desktop top bar -->
+    <div class="hidden md:flex justify-between items-center mb-10 fade-in-up">
+      <div>
+        <h1 class="text-5xl font-black tracking-tighter" id="page-title">Elevate private</h1>
+        <p class="text-zinc-400 text-lg" id="page-subtitle">Private client dashboard</p>
+      </div>
+      <div class="text-right glass px-6 py-3 rounded-3xl">
+        <p class="text-zinc-300 text-sm">TOTAL NET WORTH</p>
+        <h2 class="text-4xl font-black" id="total-balance">$18,940.34</h2>
+      </div>
+    </div>
+
+    <!-- OVERVIEW SECTION -->
+    <div id="section-overview" class="section space-y-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-7">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="bank-card p-5 cursor-pointer" onclick="showCardDetails(0)">
+            <div class="flex justify-between items-start"><div><span class="text-white/60 text-xs tracking-wide">VISA PLATINUM</span><p class="font-mono text-lg mt-1">•••• 4242</p></div><i class="fab fa-cc-visa text-5xl text-white/80"></i></div>
+            <div class="mt-12 flex justify-between items-end"><div><p class="text-xs">ALEX RIVERA</p><p class="text-[11px]">VALID 09/28</p></div><div class="card-chip w-10 h-8"></div></div>
+          </div>
+          <div class="bank-card p-5 cursor-pointer" onclick="showCardDetails(1)">
+            <div class="flex justify-between"><div><span class="text-white/60 text-xs">MASTERCARD GOLD</span><p class="font-mono text-lg">•••• 8888</p></div><i class="fab fa-cc-mastercard text-5xl"></i></div>
+            <div class="mt-12 flex justify-between"><div><p class="text-xs">ALEX RIVERA</p><p class="text-[11px]">12/27</p></div><div class="flex gap-1"><div class="w-7 h-7 bg-orange-400/60 rounded-full"></div><div class="w-7 h-7 bg-red-500/60 rounded-full"></div></div></div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="glass rounded-3xl p-5 text-center"><i class="fas fa-piggy-bank text-3xl text-emerald-400 mb-2"></i><p class="text-xs">Savings</p><p class="text-xl font-bold" id="savings-balance">$8,732.45</p></div>
+          <div class="glass rounded-3xl p-5 text-center"><i class="fas fa-wallet text-3xl text-blue-400 mb-2"></i><p class="text-xs">Checking</p><p class="text-xl font-bold" id="checking-balance">$3,421.89</p></div>
+          <div class="glass rounded-3xl p-5 text-center"><i class="fas fa-chart-line text-3xl text-violet-400 mb-2"></i><p class="text-xs">ROI (YTD)</p><p class="text-xl font-bold text-emerald-400">+14.2%</p></div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-7">
+        <div class="glass rounded-3xl p-6"><h3 class="font-bold text-xl mb-4">Portfolio Growth</h3><canvas id="performanceChart" height="200"></canvas></div>
+        <div class="glass rounded-3xl p-6"><h3 class="font-bold text-xl mb-4">Spending</h3><canvas id="spendingChart" height="200"></canvas></div>
+      </div>
+      <div class="glass rounded-3xl p-6">
+        <div class="flex justify-between items-center mb-5"><h3 class="font-bold text-2xl">Recent Activity</h3><i class="fas fa-rotate-right text-red-400 cursor-pointer hover:scale-110 transition" onclick="renderAllTransactions()"></i></div>
+        <div id="transactions-list" class="space-y-3 max-h-[380px] overflow-y-auto pr-2"></div>
+      </div>
+    </div>
+
+    <!-- ACCOUNTS SECTION -->
+    <div id="section-accounts" class="section hidden">
+      <h2 class="text-3xl md:text-4xl font-black mb-8 flex gap-3"><i class="fas fa-building-columns text-red-500"></i> Your accounts</h2>
+      <div class="grid md:grid-cols-2 gap-7">
+        <div class="glass rounded-3xl p-7"><div class="flex justify-between"><div><i class="fas fa-dollar-sign text-3xl bg-blue-500/20 p-3 rounded-2xl"></i><p class="text-2xl font-black mt-3" id="acc-checking">$3,421.89</p><p class="text-zinc-400">Checking ••••4242</p></div><span class="text-green-400">Available</span></div><div class="mt-6 text-sm">Account number: 8723 1104 4242</div></div>
+        <div class="glass rounded-3xl p-7"><div class="flex justify-between"><div><i class="fas fa-coins text-3xl bg-emerald-500/20 p-3 rounded-2xl"></i><p class="text-2xl font-black mt-3" id="acc-savings">$8,732.45</p><p class="text-zinc-400">Savings ••••1198</p></div><span class="text-blue-400">APY 2.3%</span></div><div class="mt-6 text-sm">Routing: 021000322</div></div>
+        <div class="glass rounded-3xl p-7 col-span-1 md:col-span-2"><i class="fas fa-chart-pie text-xl"></i><p class="font-bold mt-2">Total credit limit: $22,500</p><div class="w-full bg-white/20 rounded-full h-2 mt-3"><div class="bg-red-500 w-[32%] h-2 rounded-full"></div></div><p class="text-sm mt-2">Utilization: 32% | FICO score: 784</p></div>
+      </div>
+    </div>
+
+    <!-- INVESTMENTS SECTION -->
+    <div id="section-investments" class="section hidden">
+      <h2 class="text-3xl md:text-4xl font-black mb-6"><i class="fas fa-chart-line text-red-500 mr-3"></i> Wealth Portfolio</h2>
+      <div class="grid lg:grid-cols-3 gap-7"><div class="glass rounded-3xl p-6 lg:col-span-2"><canvas id="investmentPieChart" height="220"></canvas></div><div class="glass rounded-3xl p-6"><div class="space-y-4"><div><p class="font-semibold">Total value</p><p class="text-3xl font-black">$6,786.00</p><p class="text-green-400">+8.3% this quarter</p></div><div><p>Top holdings: AAPL, NVDA, BND</p><div class="mt-4 text-sm">Dividend yield: 1.9%</div></div></div></div></div>
+      <div class="glass rounded-3xl p-6 mt-7"><h4 class="font-bold">Recent market insights</h4><p class="text-sm text-zinc-300 mt-2">Tech sector showing resilience · Fed rates expected to hold · BOA Global Wealth recommends diversification.</p></div>
+    </div>
+
+    <!-- TRANSFERS SECTION -->
+    <div id="section-transfers" class="section hidden">
+      <h2 class="text-3xl md:text-4xl font-black mb-7 flex gap-3"><i class="fas fa-exchange-alt text-red-500"></i> Secure transfer</h2>
+      <div class="grid lg:grid-cols-5 gap-8">
+        <div class="lg:col-span-3 glass rounded-3xl p-8"><h3 class="text-2xl font-semibold mb-6">Instant send</h3>
+          <div class="space-y-6"><div><label class="text-sm text-zinc-400">From</label><select id="from-account-select" class="w-full bg-white/10 border rounded-2xl px-5 py-4"><option value="checking">Checking ($3,421.89)</option><option value="savings">Savings ($8,732.45)</option></select></div>
+          <div class="grid sm:grid-cols-2 gap-4"><div><label>Recipient name</label><input id="recipient-name" class="w-full bg-white/10 rounded-2xl px-5 py-4"></div><div><label>Account/Email</label><input id="recipient-account" placeholder="email or phone" class="w-full bg-white/10 rounded-2xl px-5 py-4"></div></div>
+          <div><label>Amount (USD)</label><div class="relative"><span class="absolute left-5 top-1/2 -translate-y-1/2 text-3xl">$</span><input id="transfer-amount" type="number" placeholder="0.00" class="w-full bg-white/10 rounded-2xl pl-12 pr-5 py-6 text-3xl"></div></div>
+          <button onclick="processSecureTransfer()" class="w-full bg-red-600 hover:bg-red-700 py-5 rounded-2xl text-xl font-bold transition flex justify-center gap-2"><i class="fas fa-lock"></i> Confirm transfer</button></div>
+        </div>
+        <div class="lg:col-span-2 glass rounded-3xl p-6"><div class="flex justify-between"><h3 class="text-xl font-bold">History</h3><i class="fas fa-sync-alt text-red-400 cursor-pointer" onclick="renderTransferHistory()"></i></div><div id="transfer-history" class="space-y-4 max-h-[500px] overflow-y-auto mt-4"></div></div>
+      </div>
+    </div>
+
+    <!-- CARDS SECTION -->
+    <div id="section-cards" class="section hidden">
+      <h2 class="text-3xl md:text-4xl font-black mb-6"><i class="fas fa-credit-card text-red-500 mr-3"></i>My cards</h2>
+      <div class="grid md:grid-cols-2 gap-7">
+        <div class="bank-card p-6 cursor-pointer hover:scale-[1.01]" onclick="showCardDetails(0)"><div class="flex justify-between"><div><i class="fab fa-cc-visa text-4xl"></i><p class="text-xl font-mono mt-2">**** 4242</p></div><span class="bg-green-500/30 px-3 py-1 rounded-full text-xs">Active</span></div><div class="mt-10 flex justify-between"><span>Alex Rivera</span><button class="text-sm underline" onclick="event.stopPropagation();freezeCardById(0)">Freeze</button></div></div>
+        <div class="bank-card p-6 cursor-pointer" onclick="showCardDetails(1)"><div class="flex justify-between"><i class="fab fa-cc-mastercard text-4xl"></i><p class="text-xl font-mono">**** 8888</p><span class="bg-amber-500/30 px-3 py-1 rounded-full text-xs">Active</span></div><div class="mt-10 flex justify-between"><span>Alex Rivera</span><button class="text-sm underline" onclick="event.stopPropagation();freezeCardById(1)">Freeze</button></div></div>
+        <div class="glass rounded-3xl p-6 flex items-center justify-center gap-4 border-dashed border-2 border-white/30 cursor-pointer hover:bg-white/5"><i class="fas fa-plus-circle text-3xl text-red-400"></i><span>Request new card (virtual/digital)</span></div>
+      </div>
+      <div class="glass rounded-3xl p-6 mt-6"><p class="font-bold">💳 Card controls</p><div class="flex flex-wrap gap-4 mt-3"><button class="bg-red-600/20 px-5 py-2 rounded-full text-sm">Set spending limit</button><button class="bg-red-600/20 px-5 py-2 rounded-full text-sm">Travel notice</button><button class="bg-red-600/20 px-5 py-2 rounded-full text-sm">Replace card</button></div></div>
+    </div>
+  </div>
+
+  <!-- Card Modal -->
+  <div class="modal fade" id="cardDetailModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content glass text-white"><div class="modal-header border-0"><h5 class="modal-title text-2xl font-bold" id="modalCardTitle"></h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body text-center p-7"><div id="modalCardVisual" class="bank-card p-5 w-full max-w-sm mx-auto"></div><div class="grid grid-cols-2 gap-4 mt-8"><button onclick="freezeCurrentCard()" class="py-3 bg-red-600 rounded-xl font-semibold">❄️ Freeze card</button><button class="py-3 border border-white/30 rounded-xl">Report lost</button></div></div></div></div></div>
+
+  <!-- Tawk.to Live Chat -->
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {};
+    var Tawk_LoadStart = new Date();
+    (function() {
+      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/6a261f7352a4351c2dc5cc5f/1jqielnhu';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  </script>
+
+  <script>
+    // ---------- DATA ----------
+    let appData = {
+      checking: 3421.89,
+      savings: 8732.45,
+      investmentValue: 6786.00,
+      transactions: [
+        { id: 't1', date: 'Jun 4', description: 'Starbucks Coffee', amount: -8.45, category: 'food' },
+        { id: 't2', date: 'Jun 3', description: 'Salary Deposit', amount: 5420.00, category: 'income' },
+        { id: 't3', date: 'Jun 2', description: 'Netflix Subscription', amount: -15.99, category: 'ent' },
+        { id: 't4', date: 'May 31', description: 'Whole Foods Market', amount: -87.45, category: 'food' },
+        { id: 't5', date: 'May 29', description: 'Transfer to Sarah', amount: -250.00, category: 'transfer' }
+      ],
+      transfersHistory: [
+        { id: 'h1', date: 'Jun 4', time: '14:32', to: 'Sarah Chen', amount: 250, status: 'completed', note: 'Rent share' },
+        { id: 'h2', date: 'Jun 2', time: '09:15', to: 'Whole Foods', amount: 87.45, status: 'completed', note: '' },
+        { id: 'h3', date: 'May 30', time: '17:55', to: 'Michael Rivera', amount: 1200, status: 'pending', note: 'Family support' }
+      ],
+      cardsFrozen: [false, false]
+    };
+    
+    function updateTotalDisplay() {
+      let total = appData.checking + appData.savings + appData.investmentValue;
+      document.getElementById('total-balance').innerText = `$${total.toFixed(2)}`;
+      document.getElementById('checking-balance').innerText = `$${appData.checking.toFixed(2)}`;
+      document.getElementById('savings-balance').innerText = `$${appData.savings.toFixed(2)}`;
+      document.getElementById('acc-checking').innerHTML = `$${appData.checking.toFixed(2)}`;
+      document.getElementById('acc-savings').innerHTML = `$${appData.savings.toFixed(2)}`;
+    }
+    
+    function renderAllTransactions() {
+      const container = document.getElementById('transactions-list');
+      if(!container) return;
+      container.innerHTML = appData.transactions.slice(0,7).map(tx => `<div class="glass rounded-2xl p-4 flex justify-between items-center"><div><i class="fas ${tx.amount>0 ? 'fa-arrow-up text-emerald-400' : 'fa-arrow-down text-red-400'} mr-3"></i><span class="font-medium">${tx.description}</span><p class="text-xs text-zinc-400">${tx.date}</p></div><div class="font-bold ${tx.amount>0 ? 'text-emerald-400' : 'text-red-400'}">${tx.amount>0 ? '+' : ''}$${Math.abs(tx.amount).toFixed(2)}</div></div>`).join('');
+    }
+    
+    function renderTransferHistory() {
+      const container = document.getElementById('transfer-history');
+      if(!container) return;
+      container.innerHTML = appData.transfersHistory.map(t => `<div class="glass rounded-2xl p-4 flex gap-4 items-center"><div class="w-11 h-11 bg-red-500/30 rounded-2xl flex items-center justify-center">${t.status==='completed' ? '✓' : '⏳'}</div><div class="flex-1"><div class="font-semibold">${t.to}</div><div class="text-xs text-zinc-400">${t.date} ${t.time}</div>${t.note ? `<div class="text-xs italic">${t.note}</div>`:''}</div><div class="font-bold text-red-400">-$${t.amount.toFixed(2)}</div></div>`).join('');
+    }
+    
+    function addTransaction(desc, amount, dateStr) {
+      appData.transactions.unshift({ id: Date.now(), date: dateStr || new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}), description: desc, amount: amount, category: 'transfer' });
+      renderAllTransactions();
+    }
+    
+    function processSecureTransfer() {
+      let amount = parseFloat(document.getElementById('transfer-amount').value);
+      let recipient = document.getElementById('recipient-name').value.trim() || "Beneficiary";
+      let fromAccount = document.getElementById('from-account-select').value;
+      if(isNaN(amount) || amount <= 0) { alert("Please enter valid amount"); return; }
+      if(fromAccount === 'checking' && appData.checking < amount) { alert("Insufficient funds in checking"); return; }
+      if(fromAccount === 'savings' && appData.savings < amount) { alert("Insufficient funds in savings"); return; }
+      if(fromAccount === 'checking') appData.checking -= amount;
+      else appData.savings -= amount;
+      updateTotalDisplay();
+      let newTransfer = { id: Date.now(), date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}), time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), to: recipient, amount: amount, status: 'completed', note: 'Online transfer' };
+      appData.transfersHistory.unshift(newTransfer);
+      addTransaction(`Transfer to ${recipient}`, -amount, newTransfer.date);
+      renderTransferHistory();
+      document.getElementById('transfer-amount').value = '';
+      document.getElementById('recipient-name').value = '';
+      document.getElementById('recipient-account').value = '';
+      alert(`✅ $${amount.toFixed(2)} sent successfully to ${recipient}`);
+    }
+    
+    function freezeCardById(cardIdx) {
+      appData.cardsFrozen[cardIdx] = !appData.cardsFrozen[cardIdx];
+      alert(appData.cardsFrozen[cardIdx] ? "Card frozen ❄️" : "Card unfrozen ✅");
+    }
+    
+    let currentModalCard = 0;
+    function showCardDetails(idx) {
+      currentModalCard = idx;
+      document.getElementById('modalCardTitle').innerText = idx===0 ? "Visa ••••4242" : "Mastercard ••••8888";
+      let modalVisual = document.getElementById('modalCardVisual');
+      modalVisual.innerHTML = `<div class="bank-card p-5 text-center rounded-3xl"><i class="fab ${idx===0 ? 'fa-cc-visa' : 'fa-cc-mastercard'} text-6xl mb-2"></i><p class="font-mono text-xl">**** ${idx===0 ? '4242' : '8888'}</p><p class="mt-2 ${appData.cardsFrozen[idx] ? 'text-red-400' : 'text-green-400'}">${appData.cardsFrozen[idx] ? '❄️ FROZEN' : 'ACTIVE'}</p></div>`;
+      new bootstrap.Modal(document.getElementById('cardDetailModal')).show();
+    }
+    function freezeCurrentCard() {
+      appData.cardsFrozen[currentModalCard] = !appData.cardsFrozen[currentModalCard];
+      alert(`Card ${appData.cardsFrozen[currentModalCard] ? 'frozen' : 'unfrozen'}`);
+      bootstrap.Modal.getInstance(document.getElementById('cardDetailModal')).hide();
+    }
+    
+    // Charts
+    let perfChart, spendChart, investPie;
+    function initCharts() {
+      const ctxLine = document.getElementById('performanceChart')?.getContext('2d');
+      if(ctxLine) perfChart = new Chart(ctxLine, { type: 'line', data: { labels: ['Jan','Feb','Mar','Apr','May','Jun'], datasets: [{ label: 'Portfolio Value', data: [16200,16800,17200,18040,18690,18940], borderColor: '#e31837', tension: 0.3, fill: true, backgroundColor: 'rgba(227,24,55,0.05)' }] }, options: { responsive: true, maintainAspectRatio: true } });
+      const ctxDoughnut = document.getElementById('spendingChart')?.getContext('2d');
+      if(ctxDoughnut) spendChart = new Chart(ctxDoughnut, { type: 'doughnut', data: { labels: ['Food', 'Shopping', 'Bills', 'Entertainment'], datasets: [{ data: [450, 890, 1240, 312], backgroundColor: ['#10b981','#3b82f6','#f59e0b','#ec489a'] }] }, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
+      const ctxPie = document.getElementById('investmentPieChart')?.getContext('2d');
+      if(ctxPie) investPie = new Chart(ctxPie, { type: 'pie', data: { labels: ['US Equities','Bonds','International','Crypto'], datasets: [{ data: [48, 24, 18, 10], backgroundColor: ['#ef4444','#3b82f6','#10b981','#facc15'] }] }, options: { responsive: true } });
+    }
+    
+    // Navigation & Theme
+    function navigateTo(section) {
+      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(`section-${section}`).classList.remove('hidden');
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.getElementById(`nav-${section}`).classList.add('active');
+      let titles = { overview: 'Elevate private', accounts: 'Accounts overview', investments: 'Wealth portfolio', transfers: 'Instant transfers', cards: 'Card management' };
+      document.getElementById('page-title').innerText = titles[section] || 'Bank of America';
+      if(section === 'investments' && investPie) investPie.update();
+      if(section === 'overview') { if(perfChart) perfChart.update(); if(spendChart) spendChart.update(); }
+      renderAllTransactions(); renderTransferHistory(); updateTotalDisplay();
+    }
+    
+    function toggleTheme() {
+      document.documentElement.classList.toggle('light');
+      document.body.classList.toggle('light');
+      let isLight = document.body.classList.contains('light');
+      document.getElementById('theme-icon').className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+      document.getElementById('theme-text').textContent = isLight ? 'Dark Mode' : 'Light Mode';
+    }
+    
+    function toggleMobileSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+    
+    // Preloader
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        if(preloader) { preloader.style.opacity = '0'; setTimeout(() => preloader.style.display = 'none', 800); }
+      }, 2000);
+      initCharts();
+      renderAllTransactions();
+      renderTransferHistory();
+      updateTotalDisplay();
+      navigateTo('overview');
+      setInterval(() => {
+        let select = document.getElementById('from-account-select');
+        if(select) select.innerHTML = `<option value="checking">Checking ($${appData.checking.toFixed(2)})</option><option value="savings">Savings ($${appData.savings.toFixed(2)})</option>`;
+      }, 500);
+    });
+  </script>
+</body>
+</html>

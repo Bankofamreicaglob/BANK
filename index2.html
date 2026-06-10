@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Levé Bank | International Private Banking</title>
+    <meta name="description" content="Professional private banking for the global elite.">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Splide -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Playfair Display', 'serif']
+                    },
+                    colors: {
+                        primary: '#1e40af',
+                        accent: '#3b82f6'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass { background: rgba(255,255,255,0.1); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.2); }
+        .dark .glass { background: rgba(15,23,42,0.85); border-color: rgba(148,163,184,0.3); }
+        .premium-card {
+            background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.5);
+        }
+        .dark .premium-card { background: linear-gradient(145deg, #1e2937, #334155); }
+    </style>
+</head>
+<body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center text-white text-3xl font-bold">L</div>
+                <span class="text-3xl font-bold">Levé</span>
+            </div>
+
+            <div class="hidden md:flex items-center gap-10 text-lg font-medium">
+                <a href="#services" class="hover:text-primary transition">Services</a>
+                <a href="#accounts" class="hover:text-primary transition">Accounts</a>
+                <a href="#faq" class="hover:text-primary transition">FAQ</a>
+                <a href="#contact" class="hover:text-primary transition">Contact</a>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <button onclick="toggleTheme()" class="text-2xl hover:text-primary transition">
+                    <i id="theme-icon" class="fas fa-moon"></i>
+                </button>
+                <a href="#" class="px-8 py-3 border border-slate-300 dark:border-slate-700 rounded-full hover:border-primary transition">Login</a>
+                <a href="#" class="px-8 py-3 bg-primary text-white font-semibold rounded-full">Open Account</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SLIDESHOW -->
+    <section class="relative h-screen">
+        <div id="hero-slideshow" class="splide h-full">
+            <div class="splide__track h-full">
+                <ul class="splide__list h-full">
+                    <li class="splide__slide relative h-full">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=2000&q=90" class="w-full h-full object-cover" alt="Luxury">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30"></div>
+                        <div class="absolute bottom-32 left-12 max-w-4xl">
+                            <h1 class="text-7xl md:text-8xl font-black leading-none text-white">Private Banking<br>Perfected</h1>
+                        </div>
+                    </li>
+                    <li class="splide__slide relative h-full">
+                        <img src="https://images.unsplash.com/photo-1601598851549-8e796e345ead?w=2000&q=90" class="w-full h-full object-cover" alt="Card">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30"></div>
+                        <div class="absolute bottom-32 left-12 max-w-4xl">
+                            <h1 class="text-7xl md:text-8xl font-black leading-none text-white">Obsidian Glass Card</h1>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMPLIANCE BADGES -->
+    <section class="py-12 bg-white dark:bg-slate-900 border-b">
+        <div class="max-w-7xl mx-auto px-6 flex flex-wrap justify-center gap-16">
+            <div class="flex flex-col items-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/FDIC.svg/2560px-FDIC.svg.png" class="h-12"><span class="text-xs mt-2">FDIC Insured</span></div>
+            <div class="flex flex-col items-center"><i class="fas fa-shield-alt text-5xl text-emerald-500"></i><span class="text-xs mt-2">SOC 2</span></div>
+            <div class="flex flex-col items-center"><i class="fas fa-lock text-5xl text-emerald-500"></i><span class="text-xs mt-2">256-Bit</span></div>
+        </div>
+    </section>
+
+    <!-- REALISTIC GLASS ATM CARD -->
+    <section class="py-24 bg-white dark:bg-slate-900">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h2 class="text-5xl font-bold mb-6">Levé Obsidian Glass Card</h2>
+            <div class="premium-card w-full max-w-md mx-auto h-80 rounded-3xl p-12 relative overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700">
+                <div class="absolute top-8 right-8 text-4xl font-bold text-primary">Levé</div>
+                <div class="absolute bottom-16 left-12 text-3xl font-mono tracking-widest text-slate-700 dark:text-slate-300">•••• •••• •••• 4242</div>
+                <div class="absolute bottom-16 right-12 text-sm">VALID THRU 12/29</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE ACCOUNT SELECTOR -->
+    <section id="accounts" class="py-32 bg-slate-50 dark:bg-slate-900">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-5xl font-bold text-center mb-20">Choose Your Perfect Account</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8" id="selector-grid"></div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="py-32 bg-white dark:bg-slate-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-5xl font-bold text-center mb-20">Our Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="glass p-10 rounded-3xl">Multi-Currency Accounts</div>
+                <div class="glass p-10 rounded-3xl">Wealth Management</div>
+                <div class="glass p-10 rounded-3xl">Offshore Solutions</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-32 bg-slate-50 dark:bg-slate-900">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-5xl font-bold text-center mb-16">Frequently Asked Questions</h2>
+            <div class="space-y-8">
+                <div class="glass rounded-3xl p-8">
+                    <button class="faq-question w-full text-left font-semibold text-xl flex justify-between" onclick="toggleFAQ(this)">
+                        Are deposits insured?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer hidden mt-6 text-slate-600 dark:text-slate-300">Yes. Deposits are FDIC insured up to $250,000.</div>
+                </div>
+                <div class="glass rounded-3xl p-8">
+                    <button class="faq-question w-full text-left font-semibold text-xl flex justify-between" onclick="toggleFAQ(this)">
+                        How secure is my information?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer hidden mt-6 text-slate-600 dark:text-slate-300">We use 256-bit encryption and are SOC 2 and ISO 27001 certified.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="py-32 bg-white dark:bg-slate-900">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-5xl font-bold text-center mb-16">Get In Touch</h2>
+            <form class="space-y-8" onsubmit="handleSubmit(event)">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <input type="text" placeholder="Full Name" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-8 py-6 focus:border-primary outline-none" required>
+                    <input type="email" placeholder="Email" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-8 py-6 focus:border-primary outline-none" required>
+                </div>
+                <textarea placeholder="Your Message" rows="6" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl px-8 py-6 focus:border-primary outline-none" required></textarea>
+                <button type="submit" class="w-full py-8 bg-primary text-white font-bold text-xl rounded-3xl">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 text-slate-400 py-20">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="text-4xl font-bold text-white mb-6">Levé Bank</div>
+            <p>New York • London • Dubai • Singapore</p>
+            <div class="mt-12 text-sm">© 2025 Levé International Bank. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const icon = document.getElementById('theme-icon');
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
+        }
+
+        // FAQ Toggle
+        function toggleFAQ(el) {
+            el.nextElementSibling.classList.toggle('hidden');
+        }
+
+        // Hero Slideshow
+        new Splide('#hero-slideshow', { 
+            type: 'fade', 
+            autoplay: true, 
+            interval: 5000,
+            arrows: false,
+            pagination: true 
+        }).mount();
+
+        // Interactive Account Selector
+        const vibes = [
+            { name: "Levé Yield", bonus: "$500" },
+            { name: "Levé Pro", bonus: "$1,200" },
+            { name: "Levé Crypto", bonus: "$800" },
+            { name: "Levé Black", bonus: "$2,500" }
+        ];
+
+        const grid = document.getElementById('selector-grid');
+        vibes.forEach(v => {
+            const card = document.createElement('div');
+            card.className = "glass p-10 rounded-3xl text-center cursor-pointer hover:scale-105 transition";
+            card.innerHTML = `<h4 class="text-3xl font-bold mb-4">${v.name}</h4><p class="text-lg opacity-80">+ ${v.bonus} bonus</p>`;
+            card.onclick = () => {
+                alert(`Selected: ${v.name}\nWelcome Bonus: ${v.bonus}\n\nThank you for choosing Levé Bank.`);
+                confetti({ particleCount: 200 });
+            };
+            grid.appendChild(card);
+        });
+
+        // Contact Form
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert("Thank you! Your message has been received. A relationship manager will contact you shortly.");
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Bank of America Private Banking | Secure Login</title>
+  
+  <!-- Google Fonts + Tailwind + Bootstrap + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #f0f4fc 0%, #e8edf8 100%);
+      min-height: 100vh;
+      color: #1a2634;
+      overflow-x: hidden;
+    }
+    
+    /* Premium Glass Card - Blue & White Theme */
+    .premium-glass {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s ease;
+    }
+    
+    /* Form Fields - Premium Blue/White */
+    .form-field {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 1rem 1.5rem;
+      width: 100%;
+      transition: all 0.25s;
+      font-weight: 500;
+      color: #1a2634;
+      font-size: 0.95rem;
+    }
+    .form-field:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+      transform: translateY(-1px);
+    }
+    
+    .form-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      display: block;
+      color: #5b6e8c;
+    }
+    
+    /* Login Button - Blue Gradient with subtle red accent */
+    .btn-login {
+      background: linear-gradient(105deg, #1e3a8a, #1d4ed8);
+      border: none;
+      border-radius: 44px;
+      padding: 1rem 2rem;
+      font-weight: 700;
+      transition: all 0.3s;
+      width: 100%;
+      color: white;
+    }
+    .btn-login:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px -10px rgba(29, 78, 216, 0.45);
+      background: linear-gradient(105deg, #1e40af, #2563eb);
+    }
+    
+    /* Red accent button for special actions */
+    .btn-red-outline {
+      background: transparent;
+      border: 1px solid #fecaca;
+      border-radius: 44px;
+      padding: 0.75rem;
+      transition: all 0.2s;
+      color: #dc2626;
+      font-weight: 600;
+    }
+    .btn-red-outline:hover {
+      background: #fef2f2;
+      border-color: #dc2626;
+    }
+    
+    /* Social/Biometric Options */
+    .social-option {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 44px;
+      padding: 0.85rem;
+      transition: all 0.2s;
+      cursor: pointer;
+      text-align: center;
+    }
+    .social-option:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+      background: #f8fafc;
+      box-shadow: 0 5px 12px -6px rgba(0, 0, 0, 0.08);
+    }
+    
+    /* Password toggle */
+    .password-toggle {
+      position: absolute;
+      right: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      color: #64748b;
+    }
+    .password-toggle:hover { opacity: 1; color: #1e3a8a; }
+    .relative { position: relative; }
+    
+    /* Checkbox styling */
+    .checkbox-custom {
+      width: 18px;
+      height: 18px;
+      accent-color: #1e3a8a;
+      border-radius: 5px;
+    }
+    
+    /* Links */
+    .link-premium {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .link-premium:hover { text-decoration: underline; color: #dc2626; }
+    
+    .link-red {
+      color: #dc2626;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .link-red:hover { text-decoration: underline; color: #b91c1c; }
+    
+    /* Floating Orbs */
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    /* Animation */
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .fade-slide { animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards; }
+    
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .divider::before { margin-right: 1rem; }
+    .divider::after { margin-left: 1rem; }
+    
+    /* Toast notification */
+    .toast-notify {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border-radius: 50px;
+      padding: 12px 24px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid;
+      z-index: 1000;
+      animation: slideUp 0.3s ease;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Premium Background Orbs -->
+  <div class="bg-orb w-[550px] h-[550px] bg-blue-200/50 -top-40 -right-40"></div>
+  <div class="bg-orb w-[400px] h-[400px] bg-red-100/40 bottom-20 left-0"></div>
+  <div class="bg-orb w-[300px] h-[300px] bg-blue-300/30 top-1/3 left-1/3"></div>
+
+  <!-- Top Navigation Bar -->
+  <div class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-blue-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 bg-gradient-to-br from-blue-800 to-blue-600 rounded-2xl flex items-center justify-center text-xl font-black shadow-md">B</div>
+        <div>
+          <span class="font-bold text-xl tracking-tight text-slate-800">Bank of America</span>
+          <span class="hidden md:inline-block ml-2 text-[9px] font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full tracking-wider border border-blue-200">PRIVATE ACCESS</span>
+        </div>
+      </div>
+      <div class="flex gap-3 items-center">
+        <div class="hidden lg:flex text-xs gap-3 text-slate-500"><i class="fas fa-headset text-blue-600"></i> 24/7 Priority Support</div>
+        <a href="#" class="text-sm text-slate-600 hover:text-blue-700 transition flex items-center gap-1"><i class="fas fa-question-circle"></i> Help</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Login Container -->
+  <div class="min-h-screen flex items-center justify-center px-5 pt-24 pb-16">
+    <div class="w-full max-w-md fade-slide">
+      
+      <!-- Welcome Badge -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 bg-blue-50 premium-glass px-4 py-2 rounded-full text-xs mb-5 border border-blue-200">
+          <i class="fas fa-lock text-blue-700 text-xs"></i>
+          <span class="font-semibold text-slate-700 tracking-wide">SECURE PRIVATE BANKING PORTAL</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-3 bg-gradient-to-r from-slate-800 via-blue-700 to-slate-800 bg-clip-text text-transparent">Welcome Back</h1>
+        <p class="text-slate-500 text-sm">Access your wealth management dashboard</p>
+      </div>
+
+      <!-- Login Card -->
+      <div class="premium-glass rounded-3xl p-8 md:p-9 shadow-2xl">
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          
+          <!-- Username / Email Field -->
+          <div class="mb-6">
+            <label class="form-label"><i class="fas fa-envelope mr-1 text-blue-600"></i> USERNAME OR EMAIL</label>
+            <input type="email" class="form-field" id="email" placeholder="alex.morgan@privatebank.com" required autocomplete="username">
+          </div>
+          
+          <!-- Password Field with Toggle -->
+          <div class="mb-4">
+            <label class="form-label"><i class="fas fa-key mr-1 text-blue-600"></i> PASSWORD</label>
+            <div class="relative">
+              <input type="password" class="form-field pr-12" id="password" placeholder="••••••••" required autocomplete="current-password">
+              <i class="fas fa-eye-slash password-toggle" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+            </div>
+          </div>
+          
+          <!-- Remember Me & Forgot Password -->
+          <div class="flex justify-between items-center mb-8">
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+              <input type="checkbox" id="rememberMe" class="checkbox-custom rounded">
+              <span class="text-xs text-slate-500">Remember this device</span>
+            </label>
+            <a href="#" class="link-premium text-xs font-semibold" data-bs-toggle="modal" data-bs-target="#forgotModal">Forgot Password?</a>
+          </div>
+          
+          <!-- Login Button -->
+          <button type="submit" class="btn-login text-white font-bold text-base flex items-center justify-center gap-2">
+            <i class="fas fa-arrow-right-to-bracket"></i> Sign In to Private Banking
+          </button>
+        </form>
+        
+        <!-- Divider -->
+        <div class="divider my-8">
+          <span>SECURE ACCESS</span>
+        </div>
+        
+        <!-- Biometric & Quick Login Options -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="social-option flex items-center justify-center gap-2 text-sm" onclick="biometricLogin()">
+            <i class="fas fa-fingerprint text-blue-700 text-lg"></i>
+            <span class="hidden sm:inline text-slate-700 font-medium">Biometric</span>
+          </div>
+          <div class="social-option flex items-center justify-center gap-2 text-sm" onclick="showQRLogin()">
+            <i class="fas fa-qrcode text-blue-700 text-lg"></i>
+            <span class="hidden sm:inline text-slate-700 font-medium">QR Code</span>
+          </div>
+        </div>
+        
+        <!-- Red Accented Register Link -->
+        <div class="text-center mt-4 pt-2 border-t border-slate-100">
+          <p class="text-xs text-slate-400">Don't have a Private Banking account?</p>
+          <a href="#" class="link-red text-sm font-bold inline-flex items-center gap-1 mt-1" data-bs-toggle="modal" data-bs-target="#registerModal">
+            Open an Elite Account <i class="fas fa-chevron-right text-xs"></i>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Security Badge Footer -->
+      <div class="flex justify-center gap-6 mt-8 text-[11px] font-medium text-slate-400">
+        <div class="flex items-center gap-1"><i class="fas fa-shield-alt text-blue-500"></i> 256-bit SSL</div>
+        <div class="flex items-center gap-1"><i class="fas fa-fingerprint text-blue-500"></i> Biometric Ready</div>
+        <div class="flex items-center gap-1"><i class="fas fa-clock text-blue-500"></i> Session Timeout</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal fade" id="forgotModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-3xl border-0 shadow-2xl" style="background: white;">
+        <div class="modal-header border-b border-slate-100">
+          <h5 class="modal-title font-bold text-slate-800"><i class="fas fa-key text-blue-600 mr-2"></i>Reset Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-6">
+          <p class="text-sm text-slate-600 mb-4">Enter your email and we'll send you a secure reset link.</p>
+          <input type="email" class="form-field" id="resetEmail" placeholder="your@email.com">
+        </div>
+        <div class="modal-footer border-0 pt-0 pb-6">
+          <button class="btn-login py-2 text-sm" onclick="resetPassword()">Send Reset Link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Modal - Premium CTA -->
+  <div class="modal fade" id="registerModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-3xl border-0 shadow-2xl" style="background: white;">
+        <div class="modal-body p-8 text-center">
+          <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <i class="fas fa-user-plus text-white text-2xl"></i>
+          </div>
+          <h4 class="text-2xl font-bold text-slate-800 mb-2">Begin Your Journey</h4>
+          <p class="text-sm text-slate-500 mb-5">Experience exclusive privileges, dedicated advisor, and premium rewards.</p>
+          <div class="flex gap-3 justify-center">
+            <button class="btn-login py-2 px-6 text-sm" onclick="redirectToRegistration()">Complete Registration →</button>
+            <button class="btn-red-outline px-5 text-sm" data-bs-dismiss="modal">Maybe Later</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2FA / Success Modal -->
+  <div class="modal fade" id="twoFactorModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-3xl border-0 shadow-2xl" style="background: white;">
+        <div class="modal-body p-8 text-center">
+          <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg">
+            <i class="fas fa-check text-white text-3xl"></i>
+          </div>
+          <h3 class="text-2xl font-black text-slate-800">Authentication Successful</h3>
+          <p class="mt-2 text-sm text-slate-500" id="loginUserName">Redirecting to dashboard...</p>
+          <div class="mt-4 flex justify-center gap-2">
+            <div class="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+            <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse delay-75"></div>
+            <div class="w-2 h-2 bg-blue-300 rounded-full animate-pulse delay-150"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Password visibility toggle
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('password');
+      const toggleIcon = document.getElementById('togglePassword');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+      }
+    }
+    
+    // Handle login submission
+    function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const remember = document.getElementById('rememberMe').checked;
+      
+      if (!email || !password) {
+        showToast('Please enter both email and password.', 'error');
+        return;
+      }
+      
+      if (!email.includes('@') || !email.includes('.')) {
+        showToast('Please enter a valid email address.', 'error');
+        return;
+      }
+      
+      // Simulate authentication
+      const nameFromEmail = email.split('@')[0].replace(/[^a-zA-Z]/g, ' ');
+      const displayName = nameFromEmail.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Valued Client';
+      
+      document.getElementById('loginUserName').innerHTML = `Welcome back, ${displayName}<br><span class="text-xs text-slate-400">Secure token generated</span>`;
+      
+      const twoFactorModal = new bootstrap.Modal(document.getElementById('twoFactorModal'));
+      twoFactorModal.show();
+      
+      // Store login state if remember me
+      if (remember) {
+        localStorage.setItem('preferredEmail', email);
+      } else {
+        localStorage.removeItem('preferredEmail');
+      }
+      
+      // Simulate redirect after 2 seconds
+      setTimeout(() => {
+        twoFactorModal.hide();
+        showToast(`✅ Welcome back, ${displayName}. Redirecting to dashboard.`, 'success');
+        setTimeout(() => {
+          // In production: window.location.href = "/dashboard";
+          alert("Secure access granted. Redirecting to Private Banking Dashboard.");
+        }, 500);
+      }, 1800);
+    }
+    
+    // Biometric login simulation
+    function biometricLogin() {
+      showToast('🔐 Biometric verification initiated. Please use Face ID / Touch ID.', 'info');
+      setTimeout(() => {
+        document.getElementById('email').value = "james.morgan@wealth.com";
+        document.getElementById('password').value = "••••••••";
+        showToast('✅ Biometric authenticated. Click Sign In to proceed.', 'success');
+      }, 1200);
+    }
+    
+    function showQRLogin() {
+      showToast('📱 Scan QR code using Bank of America Private Banking mobile app.', 'info');
+    }
+    
+    function resetPassword() {
+      const email = document.getElementById('resetEmail').value;
+      if (!email) {
+        showToast('Please enter your registered email address.', 'error');
+        return;
+      }
+      showToast(`📧 Password reset link sent to ${email}. Check your inbox.`, 'success');
+      bootstrap.Modal.getInstance(document.getElementById('forgotModal')).hide();
+    }
+    
+    function redirectToRegistration() {
+      bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+      showToast('Redirecting to Elite Account Registration portal...', 'info');
+      setTimeout(() => {
+        alert("You'll be redirected to our Elite Account Registration page.");
+      }, 500);
+    }
+    
+    // Toast notification system
+    function showToast(message, type = 'info') {
+      const existingToast = document.querySelector('.toast-notify');
+      if (existingToast) existingToast.remove();
+      
+      const toast = document.createElement('div');
+      toast.className = 'toast-notify';
+      if (type === 'error') {
+        toast.style.borderLeftColor = '#dc2626';
+        toast.style.background = '#fef2f2';
+        toast.style.color = '#991b1b';
+      } else if (type === 'success') {
+        toast.style.borderLeftColor = '#10b981';
+        toast.style.background = '#ecfdf5';
+        toast.style.color = '#065f46';
+      } else {
+        toast.style.borderLeftColor = '#3b82f6';
+        toast.style.background = '#eff6ff';
+        toast.style.color = '#1e3a8a';
+      }
+      toast.innerHTML = `<i class="fas ${type === 'error' ? 'fa-circle-exclamation' : type === 'success' ? 'fa-circle-check' : 'fa-info-circle'} mr-2"></i>${message}`;
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.remove(); }, 3000);
+    }
+    
+    // Load remembered email
+    function loadRememberedEmail() {
+      const savedEmail = localStorage.getItem('preferredEmail');
+      if (savedEmail && document.getElementById('email')) {
+        document.getElementById('email').value = savedEmail;
+        document.getElementById('rememberMe').checked = true;
+      }
+    }
+    
+    // Add floating label effects
+    window.onload = () => {
+      loadRememberedEmail();
+      
+      // Add styling for modal close button
+      const style = document.createElement('style');
+      style.textContent = `
+        .btn-close:focus { box-shadow: none; }
+        .modal-content { backdrop-filter: blur(0px); }
+        .animate-pulse { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .delay-75 { animation-delay: 0.2s; }
+        .delay-150 { animation-delay: 0.4s; }
+      `;
+      document.head.appendChild(style);
+    };
+    
+    // Expose global functions
+    window.togglePasswordVisibility = togglePasswordVisibility;
+    window.handleLogin = handleLogin;
+    window.biometricLogin = biometricLogin;
+    window.showQRLogin = showQRLogin;
+    window.resetPassword = resetPassword;
+    window.redirectToRegistration = redirectToRegistration;
+  </script>
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>GOD MODE | Bank of America Private Banking • Supreme Admin</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', 'Space Grotesk', sans-serif;
+      background: radial-gradient(ellipse at 20% 30%, #05070f, #010104);
+      min-height: 100vh;
+      color: #ffffff;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    /* Animated Cyber Grid Background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+      animation: gridPulse 8s infinite alternate;
+    }
+    
+    @keyframes gridPulse {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.7; }
+    }
+    
+    /* Floating Orbs - GOD MODE */
+    .orb-god {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      z-index: 0;
+      pointer-events: none;
+      animation: floatOrb 12s infinite alternate ease-in-out;
+    }
+    
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+      100% { transform: translate(50px, -50px) scale(1.2); opacity: 0.7; }
+    }
+    
+    /* ULTRA PREMIUM GLASS - GOD TIER */
+    .glass-god {
+      background: rgba(5, 15, 30, 0.55);
+      backdrop-filter: blur(24px) saturate(200%);
+      border: 1px solid rgba(0, 255, 255, 0.25);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.08);
+      transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+    }
+    
+    .glass-god:hover {
+      border-color: rgba(0, 255, 255, 0.5);
+      box-shadow: 0 30px 60px -12px rgba(0, 200, 255, 0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    
+    /* Premium Card - Supreme */
+    .card-supreme {
+      background: linear-gradient(135deg, rgba(10, 25, 45, 0.75), rgba(5, 15, 30, 0.85));
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 32px;
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card-supreme::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+      transition: left 0.6s;
+    }
+    
+    .card-supreme:hover::before { left: 100%; }
+    .card-supreme:hover { transform: translateY(-6px); border-color: rgba(0, 255, 255, 0.6); box-shadow: 0 20px 40px -12px rgba(0, 200, 255, 0.3); }
+    
+    /* GOD BUTTONS */
+    .btn-god {
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+      cursor: pointer;
+      border: none;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+    }
+    
+    .btn-god::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+    
+    .btn-god:hover::before { width: 200px; height: 200px; }
+    .btn-god:hover { transform: translateY(-3px); filter: brightness(1.1); }
+    
+    .btn-activate-god { background: linear-gradient(135deg, #00b894, #00a885); box-shadow: 0 4px 15px rgba(0,184,148,0.3); color: white; }
+    .btn-lock-god { background: linear-gradient(135deg, #f39c12, #e67e22); box-shadow: 0 4px 15px rgba(243,156,18,0.3); color: white; }
+    .btn-suspend-god { background: linear-gradient(135deg, #e74c3c, #c0392b); box-shadow: 0 4px 15px rgba(231,76,60,0.3); color: white; }
+    .btn-transfer-god { background: linear-gradient(135deg, #3498db, #2980b9); box-shadow: 0 4px 15px rgba(52,152,219,0.3); color: white; }
+    .btn-withdraw-god { background: linear-gradient(135deg, #9b59b6, #8e44ad); box-shadow: 0 4px 15px rgba(155,89,182,0.3); color: white; }
+    .btn-hold-god { background: linear-gradient(135deg, #e91e63, #c2185b); box-shadow: 0 4px 15px rgba(233,30,99,0.3); color: white; }
+    .btn-primary-god { background: linear-gradient(135deg, #00d2ff, #3a7bd5); box-shadow: 0 4px 20px rgba(0,210,255,0.3); color: white; }
+    
+    /* Premium Table - GOD TIER */
+    .table-god {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+    .table-god th {
+      text-align: left;
+      padding: 0.8rem 1rem;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7ec8e0;
+      background: transparent;
+    }
+    .table-god td {
+      padding: 1rem 1rem;
+      background: rgba(8, 20, 35, 0.7);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(0, 255, 255, 0.15);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+      transition: all 0.25s;
+    }
+    .table-god tr td:first-child { border-left: 1px solid rgba(0, 255, 255, 0.2); border-radius: 20px 0 0 20px; }
+    .table-god tr td:last-child { border-right: 1px solid rgba(0, 255, 255, 0.2); border-radius: 0 20px 20px 0; }
+    .table-god tr:hover td {
+      background: rgba(0, 200, 255, 0.15);
+      border-color: rgba(0, 255, 255, 0.5);
+      transform: scale(1.01);
+    }
+    
+    /* Status Badges - God Mode */
+    .badge-god-active { background: rgba(0,184,148,0.15); color: #00e5b8; border: 1px solid rgba(0,184,148,0.5); border-radius: 40px; padding: 0.3rem 1rem; font-size: 0.7rem; font-weight: 700; backdrop-filter: blur(4px); }
+    .badge-god-locked { background: rgba(243,156,18,0.15); color: #f7d44a; border: 1px solid rgba(243,156,18,0.5); border-radius: 40px; padding: 0.3rem 1rem; font-size: 0.7rem; font-weight: 700; }
+    .badge-god-suspended { background: rgba(231,76,60,0.15); color: #ff7675; border: 1px solid rgba(231,76,60,0.5); border-radius: 40px; padding: 0.3rem 1rem; font-size: 0.7rem; font-weight: 700; }
+    .badge-god-pending { background: rgba(155,89,182,0.15); color: #dda0dd; border: 1px solid rgba(155,89,182,0.5); border-radius: 40px; padding: 0.3rem 1rem; font-size: 0.7rem; font-weight: 700; }
+    
+    /* KPI Cards - Divine */
+    .kpi-divine {
+      background: linear-gradient(145deg, rgba(0, 30, 50, 0.7), rgba(0, 15, 30, 0.8));
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 28px;
+      padding: 1.3rem;
+      transition: all 0.3s;
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-divine::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, cyan, transparent);
+    }
+    .kpi-divine:hover { transform: translateY(-6px); border-color: cyan; box-shadow: 0 20px 35px -12px rgba(0,255,255,0.3); }
+    
+    /* Sidebar - GOD */
+    .sidebar-god {
+      background: rgba(3, 12, 24, 0.7);
+      backdrop-filter: blur(25px);
+      border-right: 1px solid rgba(0, 255, 255, 0.2);
+    }
+    
+    /* Scrollbar - Divine */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #0a0f1a; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #00d2ff, #3a7bd5); border-radius: 10px; }
+    
+    /* Modal - God Tier */
+    .modal-god .modal-content {
+      background: linear-gradient(145deg, rgba(5, 20, 40, 0.98), rgba(2, 10, 22, 0.98));
+      backdrop-filter: blur(30px);
+      border: 1px solid rgba(0, 255, 255, 0.4);
+      border-radius: 36px;
+      color: white;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+    }
+    
+    .input-god {
+      background: rgba(0, 20, 40, 0.8);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 1rem 1.2rem;
+      width: 100%;
+      color: white;
+      transition: all 0.2s;
+    }
+    .input-god:focus { outline: none; border-color: cyan; box-shadow: 0 0 0 3px rgba(0,255,255,0.2); transform: scale(1.01); }
+    
+    /* Security Indicator */
+    .security-level {
+      font-family: monospace;
+      letter-spacing: 2px;
+      text-shadow: 0 0 5px cyan;
+    }
+    
+    @keyframes glowPulse {
+      0% { text-shadow: 0 0 2px cyan; }
+      100% { text-shadow: 0 0 10px cyan; }
+    }
+    
+    .glow-text { animation: glowPulse 2s infinite alternate; }
+  </style>
+</head>
+<body>
+
+  <!-- GOD MODE Background Orbs -->
+  <div class="orb-god w-[600px] h-[600px] bg-cyan-500/20 -top-40 -right-40"></div>
+  <div class="orb-god w-[500px] h-[500px] bg-purple-600/20 bottom-20 left-0" style="animation-duration: 15s;"></div>
+  <div class="orb-god w-[400px] h-[400px] bg-blue-500/20 top-1/2 left-1/2" style="animation-duration: 10s;"></div>
+
+  <!-- SIDEBAR - SUPREME -->
+  <div class="sidebar-god fixed left-0 top-0 h-full w-80 p-7 z-50">
+    <div class="flex items-center gap-3 mb-12 pb-5 border-b border-cyan-800/40">
+      <div class="w-14 h-14 bg-gradient-to-br from-cyan-400 to-blue-700 rounded-2xl flex items-center justify-center text-2xl font-black shadow-2xl relative">
+        B<span class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></span>
+      </div>
+      <div>
+        <span class="font-black text-2xl tracking-tight">Bank of America</span>
+        <p class="text-[10px] text-cyan-400 tracking-wider mt-0.5 flex items-center gap-1"><i class="fas fa-shield-hart"></i> GOD MODE • LEVEL 10</p>
+      </div>
+    </div>
+    <div class="space-y-3">
+      <div class="flex items-center gap-3 px-5 py-3.5 bg-gradient-to-r from-cyan-600/40 to-transparent rounded-2xl border-l-3 border-cyan-400"><i class="fas fa-crown w-5 text-cyan-400"></i><span class="font-bold">Omnipotent Control</span></div>
+      <div class="flex items-center gap-3 px-5 py-3.5 opacity-50 hover:opacity-100 transition-all hover:translate-x-1"><i class="fas fa-chart-line w-5"></i><span>Celestial Analytics</span></div>
+      <div class="flex items-center gap-3 px-5 py-3.5 opacity-50 hover:opacity-100 transition-all hover:translate-x-1"><i class="fas fa-fingerprint w-5"></i><span>Quantum Security</span></div>
+      <div class="flex items-center gap-3 px-5 py-3.5 opacity-50 hover:opacity-100 transition-all hover:translate-x-1"><i class="fas fa-robot w-5"></i><span>AI Sentinel</span></div>
+    </div>
+    <div class="absolute bottom-7 left-7 right-7">
+      <div class="card-supreme p-5 text-center">
+        <i class="fas fa-dragon text-3xl text-cyan-400 mb-2"></i>
+        <p class="text-xs font-black tracking-wider">SECURITY LEVEL: <span class="text-cyan-400 security-level glow-text">██████████</span></p>
+        <p class="text-[9px] text-cyan-400/70 mt-2"><i class="fas fa-infinity"></i> Quantum Encryption Active</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="ml-80 p-8 relative z-10">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8 animate-fadeIn">
+      <div>
+        <h1 class="text-5xl font-black tracking-tighter bg-gradient-to-r from-white via-cyan-300 to-white bg-clip-text text-transparent">Divine Command Center</h1>
+        <p class="text-cyan-300/50 text-sm mt-1 flex items-center gap-2"><i class="fas fa-shield-virus"></i> GOD MODE ACTIVE • Full Omniscience</p>
+      </div>
+      <div class="flex gap-4">
+        <div class="card-supreme px-6 py-3 text-right"><p class="text-[10px] uppercase tracking-wider text-cyan-400">Total Treasury</p><p class="text-2xl font-black" id="totalSystemBalance">$0.00</p></div>
+        <div class="card-supreme px-6 py-3 text-right"><p class="text-[10px] uppercase tracking-wider text-cyan-400">Active Entities</p><p class="text-2xl font-black" id="activeAccountsCount">0</p></div>
+      </div>
+    </div>
+
+    <!-- KPI Dashboard - Divine -->
+    <div class="grid grid-cols-4 gap-6 mb-8">
+      <div class="kpi-divine"><i class="fas fa-user-astronaut text-3xl text-cyan-400 mb-3 block"></i><p class="text-3xl font-black" id="totalAccountsKPI">0</p><p class="text-xs opacity-70">Registered Souls</p></div>
+      <div class="kpi-divine"><i class="fas fa-coins text-3xl text-emerald-400 mb-3 block"></i><p class="text-3xl font-black" id="totalTransfersKPI">0</p><p class="text-xs opacity-70">Today's Transmutations</p></div>
+      <div class="kpi-divine"><i class="fas fa-skull text-3xl text-amber-400 mb-3 block"></i><p class="text-3xl font-black" id="lockedAccountsKPI">0</p><p class="text-xs opacity-70">Constrained Entities</p></div>
+      <div class="kpi-divine"><i class="fas fa-hourglass-half text-3xl text-purple-400 mb-3 block"></i><p class="text-3xl font-black" id="pendingApprovalsKPI">0</p><p class="text-xs opacity-70">Awaiting Genesis</p></div>
+    </div>
+
+    <!-- Accounts Table - GOD TIER -->
+    <div class="card-supreme p-6 overflow-x-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="font-black text-xl"><i class="fas fa-database mr-2 text-cyan-400"></i> Omniversal Account Registry</h2>
+        <button class="btn-god btn-primary-god px-5 py-2.5 flex items-center gap-2" onclick="openRegisterModal()"><i class="fas fa-plus-circle"></i> Create Reality</button>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="table-god w-full min-w-[1300px]">
+          <thead><tr><th>Entity Name</th><th>Account Sigil</th><th>Username</th><th>Ethereal Mail</th><th>Passhash</th><th>Wealth</th><th>Status</th><th>Sovereign Hold</th><th>Divine Actions</th><th>Financial Rites</th></tr></thead>
+          <tbody id="accountsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaction Modal - GOD -->
+  <div class="modal fade" id="transactionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content modal-god">
+        <div class="modal-header border-b border-cyan-800/50"><h5 class="text-xl font-black" id="modalTitle"><i class="fas fa-exchange-alt mr-2"></i>Divine Transaction</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-6" id="modalBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal fade" id="registerAccountModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-god">
+        <div class="modal-header border-b border-cyan-800/50"><h5 class="text-xl font-black"><i class="fas fa-star-of-life mr-2"></i>Create New Entity</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-6 space-y-4">
+          <input type="text" id="regFullName" class="input-god" placeholder="Full Name">
+          <input type="text" id="regUsername" class="input-god" placeholder="Username">
+          <input type="email" id="regEmail" class="input-god" placeholder="Email Address">
+          <input type="password" id="regPassword" class="input-god" placeholder="Password">
+          <input type="number" id="regBalance" class="input-god" placeholder="Initial Wealth" value="0">
+          <button class="btn-god btn-primary-god w-full py-3.5 rounded-xl" onclick="registerNewAccount()"><i class="fas fa-feather-alt"></i> Manifest Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2"></div>
+
+  <script>
+    let accounts = [
+      { id: 1, name: "Lord James A. Morgan", accNumber: "SIGIL-4287-1192", username: "james.morgan", email: "james@wealthgroup.com", password: "james@2024", balance: 28450.75, status: "active", holdTransfers: false },
+      { id: 2, name: "Lady Sarah Chen-Wei", accNumber: "SIGIL-5512-4483", username: "sarah.chen", email: "sarah.chen@pm.com", password: "sarah@789", balance: 127890.32, status: "active", holdTransfers: false },
+      { id: 3, name: "Michael Rivera", accNumber: "SIGIL-9930-2271", username: "mrivera", email: "michael.r@bankofam.com", password: "mike123", balance: 5432.19, status: "locked", holdTransfers: true },
+      { id: 4, name: "Elena Vasquez", accNumber: "SIGIL-3347-8652", username: "elena.v", email: "elena.vasquez@private.com", password: "elena@2025", balance: 34900.00, status: "suspended", holdTransfers: true },
+      { id: 5, name: "Sir William Hayes III", accNumber: "SIGIL-7782-6609", username: "will.hayes", email: "will.hayes@advisor.com", password: "willPass99", balance: 198200.50, status: "active", holdTransfers: false },
+      { id: 6, name: "Priya Kapoor", accNumber: "SIGIL-1124-5543", username: "priya.k", email: "priya.kapoor@finance.com", password: "priya@123", balance: 7450.25, status: "pending", holdTransfers: false }
+    ];
+
+    let transactionCounter = 0;
+    let currentTxAccount = null;
+    let currentTxType = null;
+
+    function renderDashboard() {
+      const tbody = document.getElementById('accountsTableBody');
+      tbody.innerHTML = '';
+      let totalBal = 0, activeCount = 0, lockedCount = 0, pendingCount = 0;
+      
+      accounts.forEach(acc => {
+        totalBal += acc.balance;
+        if (acc.status === 'active') activeCount++;
+        if (acc.status === 'locked' || acc.status === 'suspended') lockedCount++;
+        if (acc.status === 'pending') pendingCount++;
+        
+        const statusClass = acc.status === 'active' ? 'badge-god-active' : (acc.status === 'locked' ? 'badge-god-locked' : (acc.status === 'suspended' ? 'badge-god-suspended' : 'badge-god-pending'));
+        const statusText = acc.status.charAt(0).toUpperCase() + acc.status.slice(1);
+        
+        tbody.innerHTML += `<tr>
+          <td class="font-bold">${acc.name}</td>
+          <td class="font-mono text-xs tracking-wider text-cyan-300">${acc.accNumber}</td>
+          <td class="font-mono">${acc.username}</td>
+          <td class="text-sm">${acc.email}</td>
+          <td class="font-mono text-xs text-cyan-400/60">••••••</td>
+          <td class="font-black text-emerald-400 text-lg">$${acc.balance.toLocaleString()}</td>
+          <td><span class="${statusClass}">${statusText}</span></td>
+          <td><button class="btn-god btn-hold-god" onclick="toggleHoldTransfers(${acc.id})" style="padding:0.3rem 1rem"><i class="fas ${acc.holdTransfers ? 'fa-play' : 'fa-pause'}"></i> ${acc.holdTransfers ? 'Release' : 'Hold'}</button></td>
+          <td>
+            <button class="btn-god btn-activate-god" onclick="toggleAccountStatus(${acc.id}, 'activate')" ${acc.status === 'active' ? 'disabled style="opacity:0.4"' : ''}>Activate</button>
+            <button class="btn-god btn-lock-god" onclick="toggleAccountStatus(${acc.id}, 'lock')" ${acc.status === 'locked' ? 'disabled style="opacity:0.4"' : ''}>Lock</button>
+            <button class="btn-god btn-suspend-god" onclick="toggleAccountStatus(${acc.id}, 'suspend')" ${acc.status === 'suspended' ? 'disabled style="opacity:0.4"' : ''}>Suspend</button>
+          </td>
+          <td>
+            <button class="btn-god btn-transfer-god" onclick="openTransactionModal('transfer', ${acc.id})"><i class="fas fa-exchange-alt"></i> Transfer</button>
+            <button class="btn-god btn-withdraw-god" onclick="openTransactionModal('withdraw', ${acc.id})"><i class="fas fa-hand-holding-usd"></i> Withdraw</button>
+          </td>
+        </tr>`;
+      });
+      
+      document.getElementById('totalSystemBalance').innerHTML = `$${totalBal.toLocaleString()}`;
+      document.getElementById('activeAccountsCount').innerHTML = activeCount;
+      document.getElementById('totalAccountsKPI').innerHTML = accounts.length;
+      document.getElementById('lockedAccountsKPI').innerHTML = lockedCount;
+      document.getElementById('pendingApprovalsKPI').innerHTML = pendingCount;
+      document.getElementById('totalTransfersKPI').innerHTML = transactionCounter;
+    }
+
+    function toggleAccountStatus(accountId, action) {
+      const acc = accounts.find(a => a.id === accountId);
+      if (!acc) return;
+      if (action === 'activate') acc.status = 'active';
+      else if (action === 'lock') acc.status = 'locked';
+      else if (action === 'suspend') acc.status = 'suspended';
+      renderDashboard();
+      showToast(`⚡ Divine intervention: ${acc.name} ${action}ed.`, 'success');
+    }
+
+    function toggleHoldTransfers(accountId) {
+      const acc = accounts.find(a => a.id === accountId);
+      if (acc) {
+        acc.holdTransfers = !acc.holdTransfers;
+        renderDashboard();
+        showToast(`🔮 Transfer hold ${acc.holdTransfers ? 'activated' : 'deactivated'} for ${acc.name}.`, 'info');
+      }
+    }
+
+    function openTransactionModal(type, accountId) {
+      const acc = accounts.find(a => a.id === accountId);
+      if (!acc) return;
+      if (acc.holdTransfers) { showToast(`⛔ Transfer hold active on ${acc.name}.`, 'error'); return; }
+      if (acc.status !== 'active') { showToast(`❌ Entity is ${acc.status}.`, 'error'); return; }
+      currentTxAccount = acc;
+      currentTxType = type;
+      document.getElementById('modalTitle').innerHTML = type === 'transfer' ? '💸 Ethereal Transfer' : '💵 Wealth Withdrawal';
+      document.getElementById('modalBody').innerHTML = `
+        <div class="card-supreme p-4 mb-5"><p class="text-sm">Entity: <span class="font-bold">${acc.name}</span> (${acc.accNumber})</p><p class="text-2xl font-black text-emerald-400 mt-1">$${acc.balance.toLocaleString()}</p></div>
+        ${type === 'transfer' ? '<input type="text" id="transferRecipient" class="input-god mb-4" placeholder="Recipient Sigil / Username">' : ''}
+        <input type="number" id="txAmount" class="input-god mb-4" placeholder="Amount">
+        <input type="text" id="txReference" class="input-god mb-4" placeholder="Cosmic Reference">
+        <button class="btn-god btn-transfer-god w-full py-3 rounded-xl" onclick="executeTransaction()">Confirm Rite</button>
+      `;
+      new bootstrap.Modal(document.getElementById('transactionModal')).show();
+    }
+
+    function executeTransaction() {
+      const amount = parseFloat(document.getElementById('txAmount').value);
+      if (isNaN(amount) || amount <= 0) { showToast('Invalid amount', 'error'); return; }
+      if (amount > currentTxAccount.balance) { showToast('Insufficient wealth', 'error'); return; }
+      
+      if (currentTxType === 'transfer') {
+        const recipientRef = document.getElementById('transferRecipient')?.value.trim();
+        if (!recipientRef) { showToast('Recipient required', 'error'); return; }
+        const recipient = accounts.find(a => a.accNumber === recipientRef || a.username === recipientRef);
+        if (!recipient) { showToast('Recipient not found in cosmos', 'error'); return; }
+        if (recipient.status !== 'active') { showToast('Recipient is inactive', 'error'); return; }
+        currentTxAccount.balance -= amount;
+        recipient.balance += amount;
+        transactionCounter++;
+        showToast(`✨ Transferred $${amount.toFixed(2)} to ${recipient.name}.`, 'success');
+      } else {
+        currentTxAccount.balance -= amount;
+        showToast(`💰 Withdrawn $${amount.toFixed(2)} from ${currentTxAccount.name}.`, 'success');
+        transactionCounter++;
+      }
+      renderDashboard();
+      bootstrap.Modal.getInstance(document.getElementById('transactionModal')).hide();
+    }
+
+    function openRegisterModal() { new bootstrap.Modal(document.getElementById('registerAccountModal')).show(); }
+    
+    function registerNewAccount() {
+      const name = document.getElementById('regFullName').value.trim();
+      const username = document.getElementById('regUsername').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const balance = parseFloat(document.getElementById('regBalance').value) || 0;
+      if (!name || !username || !email || !password) { showToast('All fields required', 'error'); return; }
+      const newId = Math.max(...accounts.map(a => a.id)) + 1;
+      const newAccNumber = `SIGIL-${Math.floor(Math.random() * 9000 + 1000)}-${Math.floor(Math.random() * 9000 + 1000)}`;
+      accounts.push({ id: newId, name, accNumber: newAccNumber, username, email, password, balance, status: 'pending', holdTransfers: false });
+      renderDashboard();
+      showToast(`🌟 New entity ${name} manifested.`, 'success');
+      bootstrap.Modal.getInstance(document.getElementById('registerAccountModal')).hide();
+      document.getElementById('regFullName').value = '';
+      document.getElementById('regUsername').value = '';
+      document.getElementById('regEmail').value = '';
+      document.getElementById('regPassword').value = '';
+    }
+
+    function showToast(msg, type) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `card-supreme rounded-xl px-5 py-3 text-sm shadow-xl border-l-4 ${type === 'error' ? 'border-red-500' : type === 'success' ? 'border-emerald-500' : 'border-cyan-500'} animate-fadeIn`;
+      toast.innerHTML = `<i class="fas ${type === 'error' ? 'fa-skull' : type === 'success' ? 'fa-crown' : 'fa-infinity'} mr-2"></i>${msg}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+
+    renderDashboard();
+  </script>
+</body>
+</html>

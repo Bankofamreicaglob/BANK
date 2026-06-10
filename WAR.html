@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Bank of America | NEBULA ADMIN • Secure Gateway</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', 'Space Grotesk', sans-serif;
+      background: radial-gradient(ellipse at 20% 30%, #0a0e1a, #010104);
+      min-height: 100vh;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    
+    /* Animated gradient orbs */
+    .orb-1, .orb-2, .orb-3 {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+      animation: float 18s infinite alternate ease-in-out;
+    }
+    .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(0,200,255,0.2), transparent); top: -200px; left: -200px; }
+    .orb-2 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,255,200,0.15), transparent); bottom: -300px; right: -200px; animation-duration: 22s; }
+    .orb-3 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(100,0,255,0.15), transparent); top: 40%; left: 60%; animation-duration: 14s; }
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+      100% { transform: translate(40px, -40px) scale(1.2); opacity: 0.8; }
+    }
+    
+    /* Glassmorphism Master */
+    .glass-master {
+      background: rgba(8, 18, 32, 0.55);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 230, 255, 0.2);
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6);
+      transition: all 0.35s;
+    }
+    .glass-premium {
+      background: linear-gradient(145deg, rgba(10, 25, 45, 0.75), rgba(5, 15, 28, 0.85));
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      border-radius: 32px;
+      transition: all 0.3s;
+    }
+    .glass-premium:hover {
+      border-color: rgba(0, 230, 255, 0.6);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 35px -12px rgba(0, 200, 255, 0.25);
+    }
+    
+    /* Buttons - Divine Icons */
+    .btn-divine {
+      padding: 0.45rem 1.2rem;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      transition: all 0.25s;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-divine i { font-size: 0.8rem; }
+    .btn-approve { background: linear-gradient(135deg, #00e5b3, #00b894); box-shadow: 0 4px 12px rgba(0,184,148,0.3); color: white; }
+    .btn-reject { background: linear-gradient(135deg, #ff5e5e, #e74c3c); box-shadow: 0 4px 12px rgba(231,76,60,0.3); color: white; }
+    .btn-activate { background: linear-gradient(135deg, #00e5b3, #00b894); color: white; }
+    .btn-lock { background: linear-gradient(135deg, #ffb347, #f39c12); color: white; }
+    .btn-suspend { background: linear-gradient(135deg, #ff5e5e, #e74c3c); color: white; }
+    .btn-transfer { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
+    .btn-withdraw { background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: white; }
+    .btn-hold { background: linear-gradient(135deg, #ff6a88, #ff99ac); color: white; }
+    .btn-primary-glow { background: linear-gradient(135deg, #00d2ff, #3a7bd5); box-shadow: 0 4px 15px rgba(0,210,255,0.4); color: white; }
+    .btn-divine:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    
+    /* Sidebar - Luxe */
+    .sidebar-luxe {
+      position: fixed; top: 0; left: 0; height: 100%; width: 280px;
+      background: rgba(3, 10, 22, 0.88);
+      backdrop-filter: blur(28px);
+      border-right: 1px solid rgba(0, 200, 255, 0.3);
+      transform: translateX(0);
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-luxe.closed { transform: translateX(-100%); }
+    .sidebar-nav { flex: 1; overflow-y: auto; padding: 1.8rem 1rem 1rem 1rem; scrollbar-width: thin; }
+    .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(0, 200, 255, 0.2); margin-top: auto; }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 14px; padding: 12px 18px;
+      margin: 6px 8px; border-radius: 20px; transition: all 0.25s; cursor: pointer;
+    }
+    .sidebar-item.active {
+      background: linear-gradient(90deg, rgba(0,200,255,0.25), transparent);
+      border-left: 3px solid #00e5ff;
+    }
+    .sidebar-item i { width: 24px; font-size: 1.2rem; }
+    .sidebar-item:hover:not(.active) { background: rgba(0,200,255,0.12); transform: translateX(6px); }
+    
+    /* Tables - Cosmic */
+    .table-cosmic { width: 100%; border-collapse: separate; border-spacing: 0 10px; min-width: 1100px; }
+    .table-cosmic th { text-align: left; padding: 0.8rem 1rem; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #80e0ff; }
+    .table-cosmic td { padding: 1rem 1rem; background: rgba(10, 25, 45, 0.6); backdrop-filter: blur(4px); border-top: 1px solid rgba(0,200,255,0.2); border-bottom: 1px solid rgba(0,200,255,0.2); }
+    .table-cosmic tr td:first-child { border-left: 1px solid rgba(0,200,255,0.25); border-radius: 24px 0 0 24px; }
+    .table-cosmic tr td:last-child { border-right: 1px solid rgba(0,200,255,0.25); border-radius: 0 24px 24px 0; }
+    .table-cosmic tr:hover td { background: rgba(0,160,210,0.25); }
+    
+    /* Badges */
+    .badge-cosmic { display: inline-block; padding: 0.3rem 1.2rem; border-radius: 60px; font-size: 0.7rem; font-weight: 700; }
+    .badge-active { background: rgba(0,230,180,0.15); color: #2ecc71; border: 1px solid rgba(0,230,180,0.5); }
+    .badge-locked { background: rgba(255,180,70,0.15); color: #f7d44a; border: 1px solid rgba(255,180,70,0.5); }
+    .badge-suspended { background: rgba(255,80,80,0.15); color: #ff7675; border: 1px solid rgba(255,80,80,0.5); }
+    .badge-pending { background: rgba(170,100,255,0.15); color: #dda0dd; border: 1px solid rgba(170,100,255,0.5); }
+    
+    /* KPI Cards - Stellar */
+    .kpi-stellar { background: linear-gradient(145deg, rgba(0, 50, 70, 0.6), rgba(0, 20, 40, 0.7)); border: 1px solid rgba(0,200,255,0.35); border-radius: 32px; padding: 1.3rem; transition: 0.3s; backdrop-filter: blur(8px); }
+    .kpi-stellar:hover { transform: translateY(-6px); border-color: cyan; box-shadow: 0 20px 30px -12px rgba(0,255,255,0.2); }
+    
+    /* Lock Screen */
+    .lock-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(ellipse at 40% 30%, #0a1022, #010105);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.6s;
+    }
+    .lock-card { max-width: 460px; width: 90%; padding: 2rem; text-align: center; background: rgba(8, 18, 32, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(0,200,255,0.4); border-radius: 48px; }
+    .lock-input { background: rgba(0,20,45,0.9); border: 1px solid rgba(0,230,255,0.5); border-radius: 60px; padding: 1rem 1.5rem; width: 100%; color: white; font-size: 1.1rem; text-align: center; letter-spacing: 3px; }
+    .lock-input:focus { outline: none; border-color: #00e5ff; box-shadow: 0 0 0 4px rgba(0,229,255,0.2); }
+    
+    /* Modal Premium */
+    .modal-stellar .modal-content { background: linear-gradient(145deg, rgba(5,20,40,0.98), rgba(2,10,22,0.98)); backdrop-filter: blur(30px); border: 1px solid rgba(0,200,255,0.4); border-radius: 40px; color: white; }
+    .input-stellar { background: rgba(0,20,45,0.8); border: 1px solid rgba(0,200,255,0.4); border-radius: 28px; padding: 0.9rem 1.2rem; width: 100%; color: white; }
+    .input-stellar:focus { outline: none; border-color: #00d2ff; box-shadow: 0 0 0 3px rgba(0,210,255,0.2); }
+    
+    /* Responsive */
+    .menu-toggle { display: none; position: fixed; top: 1rem; left: 1rem; z-index: 1100; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); border-radius: 40px; padding: 0.7rem 1.2rem; cursor: pointer; border: 1px solid rgba(0,200,255,0.5); }
+    @media (max-width: 768px) { .menu-toggle { display: flex; align-items: center; gap: 8px; } .main-content { margin-left: 0 !important; padding-top: 5rem; } .sidebar-luxe { transform: translateX(-100%); } .sidebar-luxe.open { transform: translateX(0); } }
+    @media (min-width: 769px) { .main-content { margin-left: 280px; } }
+    .animate-fade { animation: fadeUp 0.5s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    .toast-glow { background: rgba(0,20,40,0.95); backdrop-filter: blur(12px); border-left: 4px solid; border-radius: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="orb-1"></div><div class="orb-2"></div><div class="orb-3"></div>
+
+<!-- LOCK SCREEN -->
+<div id="lockScreen" class="lock-screen">
+  <div class="lock-card">
+    <div class="w-24 h-24 bg-gradient-to-br from-cyan-400 to-indigo-600 rounded-3xl flex items-center justify-center text-4xl font-black mx-auto mb-5 shadow-2xl"><i class="fas fa-shield-hart text-white text-4xl"></i></div>
+    <h2 class="text-3xl font-black mb-2">Admin Vault</h2>
+    <p class="text-xs text-cyan-300/80 mb-6">Enter master passkey to access</p>
+    <input type="password" id="lockPassword" class="lock-input" placeholder="••••••••••" autofocus>
+    <button id="unlockBtn" class="btn-divine btn-primary-glow w-full mt-5 py-3 text-base"><i class="fas fa-key me-2"></i> Unlock Portal</button>
+    <p id="lockError" class="text-red-400 text-xs mt-3 hidden"><i class="fas fa-skull me-1"></i> Incorrect. Access denied.</p>
+    <div class="mt-6 text-[10px] opacity-40"><i class="fas fa-fingerprint me-1"></i> Quantum Secure Gateway</div>
+  </div>
+</div>
+
+<!-- DASHBOARD (initially hidden) -->
+<div id="dashboardContainer" style="display: none;">
+  <div class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars text-cyan-400 text-xl"></i><span class="text-white text-sm font-semibold">Menu</span></div>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar-luxe">
+    <div class="sidebar-nav">
+      <div class="flex items-center gap-3 mb-8 pb-4 border-b border-cyan-800/40 px-2">
+        <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-700 rounded-2xl flex items-center justify-center text-xl font-black shadow-xl"><i class="fas fa-bank text-white"></i></div>
+        <div><span class="font-black text-2xl tracking-tight">Bank of America</span><p class="text-[9px] text-cyan-400 tracking-wider mt-0.5">QUANTUM ADMIN</p></div>
+      </div>
+      <div class="sidebar-item active" onclick="setActiveTab(this, 'dashboard')"><i class="fas fa-chart-line"></i><span>Dashboard</span></div>
+      <div class="sidebar-item" onclick="setActiveTab(this, 'approvals')"><i class="fas fa-clipboard-check"></i><span>Approvals Hub</span><span id="pendingBadge" class="ml-auto bg-purple-600/60 text-[10px] px-2 py-0.5 rounded-full">0</span></div>
+      <div class="sidebar-item" onclick="setActiveTab(this, 'accounts')"><i class="fas fa-users-viewfinder"></i><span>All Accounts</span></div>
+      <div class="sidebar-item" onclick="setActiveTab(this, 'transfers')"><i class="fas fa-chart-simple"></i><span>Transfer Log</span></div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="glass-premium p-4 text-center"><i class="fas fa-dragon text-2xl text-cyan-400 mb-1"></i><p class="text-[10px] font-bold">SECURITY MATRIX • LEVEL 5</p><p class="text-[8px] opacity-60 mt-1">AES-256 | Quantum Ready</p></div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content p-4 md:p-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 animate-fade">
+      <div><h1 class="text-4xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-white via-cyan-300 to-white bg-clip-text text-transparent" id="pageTitle">Command Center</h1><p class="text-cyan-300/50 text-sm mt-1" id="pageSubtitle">Omnipotent oversight</p></div>
+      <div class="flex gap-3"><div class="glass-master rounded-2xl px-5 py-2 text-right"><p class="text-[9px] uppercase">Total Liquidity</p><p class="text-xl font-black" id="totalBalance">$0</p></div><div class="glass-master rounded-2xl px-5 py-2 text-right"><p class="text-[9px] uppercase">Active Entities</p><p class="text-xl font-black" id="activeCount">0</p></div></div>
+    </div>
+
+    <!-- KPI Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div class="kpi-stellar"><i class="fas fa-rocket text-3xl text-cyan-400 mb-3 block"></i><p class="text-3xl font-black" id="totalAccounts">0</p><p class="text-xs opacity-70">Total Accounts</p></div>
+      <div class="kpi-stellar"><i class="fas fa-hourglass-half text-3xl text-purple-400 mb-3 block"></i><p class="text-3xl font-black" id="pendingApprovalCount">0</p><p class="text-xs opacity-70">Pending Approvals</p></div>
+      <div class="kpi-stellar"><i class="fas fa-arrow-right-arrow-left text-3xl text-emerald-400 mb-3 block"></i><p class="text-3xl font-black" id="totalTransfers">0</p><p class="text-xs opacity-70">Today's Transfers</p></div>
+      <div class="kpi-stellar"><i class="fas fa-shield text-3xl text-amber-400 mb-3 block"></i><p class="text-3xl font-black" id="restrictedCount">0</p><p class="text-xs opacity-70">Restricted</p></div>
+    </div>
+
+    <!-- Panels -->
+    <div id="dashboardPanel" class="panel glass-premium p-6 animate-fade"><h2 class="font-black text-xl mb-4"><i class="fas fa-chart-line mr-2 text-cyan-400"></i> Executive Nexus</h2><div class="grid md:grid-cols-2 gap-6"><div class="glass-master p-5 rounded-2xl"><p class="text-sm opacity-70"><i class="fas fa-bolt me-1"></i> Quick Actions</p><div class="flex flex-wrap gap-3 mt-3"><button class="btn-divine btn-primary-glow" onclick="document.querySelector('[onclick*=\\'approvals\\']').click()"><i class="fas fa-check-double"></i> Approvals</button><button class="btn-divine btn-transfer" onclick="document.querySelector('[onclick*=\\'accounts\\']').click()"><i class="fas fa-users"></i> Accounts</button><button class="btn-divine btn-approve" onclick="openRegisterModal()"><i class="fas fa-user-plus"></i> Register</button></div></div><div class="glass-master p-5 rounded-2xl"><p class="text-sm opacity-70"><i class="fas fa-microchip me-1"></i> System Core</p><div class="mt-2 space-y-2 text-sm"><i class="fas fa-check-circle text-emerald-400"></i> All systems operational<br><i class="fas fa-shield-virus text-cyan-400"></i> Threat level: ZERO<br><i class="fas fa-sync-alt text-blue-400"></i> Real-time sync</div></div></div></div>
+
+    <div id="approvalsPanel" class="panel glass-premium p-6 animate-fade hidden"><div class="flex flex-wrap justify-between items-center gap-4 mb-5"><h2 class="font-black text-xl"><i class="fas fa-clipboard-list mr-2 text-cyan-400"></i> Pending Registrations</h2><span class="text-xs text-cyan-400"><i class="fas fa-shield"></i> Awaiting validation</span></div><div class="table-wrapper overflow-x-auto"><table class="table-cosmic w-full"><thead><tr><th>Full Name</th><th>Username</th><th>Email</th><th>Initial Balance</th><th>Action</th></tr></thead><tbody id="pendingTableBody"></tbody></table></div></div>
+
+    <div id="accountsPanel" class="panel glass-premium p-6 animate-fade hidden"><div class="flex flex-wrap justify-between items-center gap-4 mb-5"><h2 class="font-black text-xl"><i class="fas fa-table-list mr-2 text-cyan-400"></i> Complete Account Registry</h2><button class="btn-divine btn-primary-glow" onclick="openRegisterModal()"><i class="fas fa-user-plus"></i> New Account</button></div><div class="table-wrapper overflow-x-auto"><table class="table-cosmic w-full"><thead><tr><th>Name</th><th>Account #</th><th>Username</th><th>Email</th><th>Balance</th><th>Status</th><th>Hold</th><th>Actions</th><th>Finance</th></tr></thead><tbody id="accountsTableBody"></tbody></table></div></div>
+
+    <div id="transfersPanel" class="panel glass-premium p-6 animate-fade hidden"><h2 class="font-black text-xl mb-4"><i class="fas fa-history mr-2 text-cyan-400"></i> Transfer Ledger</h2><div class="table-wrapper overflow-x-auto"><table class="table-cosmic w-full"><thead><tr><th>Timestamp</th><th>From</th><th>To</th><th>Amount</th><th>Reference</th></tr></thead><tbody id="transferLogBody"><tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-database me-2"></i>No transactions yet</td></tr></tbody></table></div></div>
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="modal fade" id="txModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content modal-stellar"><div class="modal-header border-b border-cyan-800/50"><h5 class="text-xl font-black" id="txModalTitle"><i class="fas fa-exchange-alt me-2"></i>Transaction</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-6" id="txModalBody"></div></div></div></div>
+<div class="modal fade" id="registerModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content modal-stellar"><div class="modal-header border-b border-cyan-800/50"><h5 class="text-xl font-black"><i class="fas fa-user-astronaut me-2"></i>Register New Entity</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-6 space-y-4"><input type="text" id="regName" class="input-stellar" placeholder="Full Legal Name"><input type="text" id="regUsername" class="input-stellar" placeholder="Username"><input type="email" id="regEmail" class="input-stellar" placeholder="Email Address"><input type="password" id="regPassword" class="input-stellar" placeholder="Temporary Password"><input type="number" id="regBalance" class="input-stellar" placeholder="Initial Deposit" value="0"><button class="btn-divine btn-primary-glow w-full py-3 rounded-2xl" onclick="registerAccount()"><i class="fas fa-feather-alt me-2"></i>Create Account (Pending Approval)</button></div></div></div></div>
+<div id="toastContainer" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 w-auto max-w-[90%] pointer-events-none"></div>
+
+<script>
+  // LOCK SCREEN LOGIC
+  const correctPassword = "WARGANSTER";
+  const lockScreen = document.getElementById("lockScreen");
+  const dashboard = document.getElementById("dashboardContainer");
+  const unlockBtn = document.getElementById("unlockBtn");
+  const lockPasswordInput = document.getElementById("lockPassword");
+  const lockError = document.getElementById("lockError");
+
+  function unlockDashboard() {
+    if (lockPasswordInput.value === correctPassword) {
+      lockScreen.style.opacity = "0";
+      setTimeout(() => {
+        lockScreen.style.display = "none";
+        dashboard.style.display = "block";
+        refreshAll();
+        setActiveTab(document.querySelector(".sidebar-item"), "dashboard");
+      }, 500);
+    } else {
+      lockError.classList.remove("hidden");
+      lockPasswordInput.value = "";
+      lockPasswordInput.focus();
+      setTimeout(() => lockError.classList.add("hidden"), 2000);
+    }
+  }
+  unlockBtn.addEventListener("click", unlockDashboard);
+  lockPasswordInput.addEventListener("keypress", (e) => { if (e.key === "Enter") unlockDashboard(); });
+
+  // DASHBOARD DATA
+  let accounts = [
+    { id: 1, name: "Alexander M. Pierce", accNumber: "BOA-8872-11A", username: "alex.pierce", email: "alex@piercecap.com", password: "alex@2024", balance: 28450.75, status: "active", holdTransfers: false },
+    { id: 2, name: "Dr. Sarah V. Chen", accNumber: "BOA-4451-22B", username: "sarah.chen", email: "sarah.chen@pm.com", password: "sarah@789", balance: 127890.32, status: "active", holdTransfers: false },
+    { id: 3, name: "Michael Rivera", accNumber: "BOA-9932-33C", username: "mrivera", email: "michael.r@bank.com", password: "mike123", balance: 5432.19, status: "locked", holdTransfers: true },
+    { id: 4, name: "Elena Vasquez", accNumber: "BOA-2276-44D", username: "elena.v", email: "elena.vasquez@private.com", password: "elena@2025", balance: 34900.00, status: "suspended", holdTransfers: true },
+    { id: 5, name: "William Hayes III", accNumber: "BOA-6610-55E", username: "will.hayes", email: "will.hayes@advisor.com", password: "willPass99", balance: 198200.50, status: "active", holdTransfers: false },
+    { id: 6, name: "Priya Kapoor", accNumber: "BOA-5543-66F", username: "priya.k", email: "priya.kapoor@finance.com", password: "priya@123", balance: 7450.25, status: "pending", holdTransfers: false }
+  ];
+  let transferLog = [];
+  let txCounter = 0;
+  let currentTxAccount = null, currentTxType = null;
+
+  function showToast(msg, type = "info") {
+    const container = document.getElementById("toastContainer");
+    const toast = document.createElement("div");
+    toast.className = `glass-master rounded-xl px-4 py-2 text-sm shadow-xl border-l-4 ${type === "error" ? "border-red-500" : type === "success" ? "border-emerald-500" : "border-cyan-500"} animate-fade pointer-events-auto`;
+    toast.innerHTML = `<i class="fas ${type === "error" ? "fa-triangle-exclamation" : type === "success" ? "fa-crown" : "fa-circle-info"} me-2"></i>${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
+  }
+
+  function updateStats() {
+    const pendingCount = accounts.filter(a => a.status === "pending").length;
+    document.getElementById("pendingBadge").innerText = pendingCount;
+    document.getElementById("pendingApprovalCount").innerHTML = pendingCount;
+    let totalBal = 0, active = 0, restricted = 0;
+    accounts.forEach(acc => { totalBal += acc.balance; if (acc.status === "active") active++; if (acc.status === "locked" || acc.status === "suspended") restricted++; });
+    document.getElementById("totalBalance").innerHTML = `$${totalBal.toLocaleString()}`;
+    document.getElementById("activeCount").innerHTML = active;
+    document.getElementById("totalAccounts").innerHTML = accounts.length;
+    document.getElementById("restrictedCount").innerHTML = restricted;
+    document.getElementById("totalTransfers").innerHTML = txCounter;
+  }
+
+  function renderAccounts() {
+    const tbody = document.getElementById("accountsTableBody");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    accounts.forEach(acc => {
+      const statusClass = acc.status === "active" ? "badge-active" : (acc.status === "locked" ? "badge-locked" : (acc.status === "suspended" ? "badge-suspended" : "badge-pending"));
+      const statusText = acc.status.charAt(0).toUpperCase() + acc.status.slice(1);
+      tbody.innerHTML += `<tr><td class="font-bold">${acc.name}</td><td class="font-mono text-xs">${acc.accNumber}</td><td>${acc.username}</td><td class="truncate max-w-[150px]">${acc.email}</td><td class="font-black text-emerald-400">$${acc.balance.toLocaleString()}</td><td><span class="badge-cosmic ${statusClass}">${statusText}</span></td><td><button class="btn-divine btn-hold" onclick="toggleHold(${acc.id})"><i class="fas ${acc.holdTransfers ? 'fa-play' : 'fa-pause'}"></i> ${acc.holdTransfers ? 'Release' : 'Hold'}</button></td><td class="whitespace-nowrap"><button class="btn-divine btn-activate" onclick="setStatus(${acc.id}, 'activate')" ${acc.status === "active" ? "disabled style='opacity:0.5'" : ""}><i class="fas fa-play-circle"></i> Activate</button><button class="btn-divine btn-lock" onclick="setStatus(${acc.id}, 'lock')" ${acc.status === "locked" ? "disabled style='opacity:0.5'" : ""}><i class="fas fa-lock"></i> Lock</button><button class="btn-divine btn-suspend" onclick="setStatus(${acc.id}, 'suspend')" ${acc.status === "suspended" ? "disabled style='opacity:0.5'" : ""}><i class="fas fa-ban"></i> Suspend</button></td><td class="whitespace-nowrap"><button class="btn-divine btn-transfer" onclick="openTxModal('transfer', ${acc.id})"><i class="fas fa-exchange-alt"></i> Transfer</button><button class="btn-divine btn-withdraw" onclick="openTxModal('withdraw', ${acc.id})"><i class="fas fa-hand-holding-usd"></i> Withdraw</button></td></tr>`;
+    });
+  }
+
+  function renderPending() {
+    const pendingBody = document.getElementById("pendingTableBody");
+    if (!pendingBody) return;
+    const pendingAccs = accounts.filter(a => a.status === "pending");
+    pendingBody.innerHTML = "";
+    if (pendingAccs.length === 0) { pendingBody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-check-circle me-2"></i>All clear, no pending requests</td></tr>`; return; }
+    pendingAccs.forEach(acc => {
+      pendingBody.innerHTML += `<tr><td class="font-bold">${acc.name}</td><td>${acc.username}</td><td>${acc.email}</td><td class="font-semibold">$${acc.balance.toLocaleString()}</td><td class="whitespace-nowrap"><button class="btn-divine btn-approve" onclick="approveAccount(${acc.id})"><i class="fas fa-check-circle"></i> Approve</button><button class="btn-divine btn-reject" onclick="rejectAccount(${acc.id})"><i class="fas fa-trash-alt"></i> Reject</button></td></tr>`;
+    });
+  }
+
+  function renderTransferLog() {
+    const logBody = document.getElementById("transferLogBody");
+    if (!logBody) return;
+    if (transferLog.length === 0) { logBody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-database me-2"></i>No transfers recorded</td></tr>`; return; }
+    logBody.innerHTML = "";
+    [...transferLog].reverse().slice(0, 25).forEach(t => {
+      logBody.innerHTML += `<tr><td class="text-xs">${t.timestamp}</td><td>${t.from}</td><td>${t.to}</td><td class="text-emerald-400 font-bold">$${t.amount.toFixed(2)}</td><td class="text-xs">${t.ref || '-'}</td></tr>`;
+    });
+  }
+
+  function refreshAll() { updateStats(); renderAccounts(); renderPending(); renderTransferLog(); }
+
+  function setStatus(id, action) { const acc = accounts.find(a => a.id === id); if (!acc) return; if (action === "activate") acc.status = "active"; else if (action === "lock") acc.status = "locked"; else if (action === "suspend") acc.status = "suspended"; refreshAll(); showToast(`⚡ ${acc.name} ${action}ed`, "success"); }
+  function toggleHold(id) { const acc = accounts.find(a => a.id === id); if (acc) { acc.holdTransfers = !acc.holdTransfers; refreshAll(); showToast(`🔒 Hold ${acc.holdTransfers ? "activated" : "deactivated"} for ${acc.name}`, "info"); } }
+  function approveAccount(id) { const acc = accounts.find(a => a.id === id); if (acc && acc.status === "pending") { acc.status = "active"; refreshAll(); showToast(`✅ ${acc.name} approved and activated`, "success"); } }
+  function rejectAccount(id) { const acc = accounts.find(a => a.id === id); if (acc && acc.status === "pending") { accounts = accounts.filter(a => a.id !== id); refreshAll(); showToast(`❌ ${acc.name} registration rejected`, "error"); } }
+
+  function openTxModal(type, id) {
+    const acc = accounts.find(a => a.id === id);
+    if (!acc) return;
+    if (acc.holdTransfers && type !== "withdraw") { showToast(`⛔ Transfers on hold for ${acc.name}`, "error"); return; }
+    if (acc.status !== "active") { showToast(`❌ Account is ${acc.status}`, "error"); return; }
+    currentTxAccount = acc; currentTxType = type;
+    document.getElementById("txModalTitle").innerHTML = type === "transfer" ? "<i class='fas fa-exchange-alt me-2'></i>Execute Transfer" : "<i class='fas fa-hand-holding-usd me-2'></i>Withdrawal";
+    document.getElementById("txModalBody").innerHTML = `<div class="glass-premium p-4 mb-5"><p class="text-sm">Account: <span class="font-bold">${acc.name}</span> (${acc.accNumber})</p><p class="text-2xl font-black text-emerald-400 mt-1">$${acc.balance.toLocaleString()}</p></div>${type === "transfer" ? '<input type="text" id="recipientRef" class="input-stellar mb-4" placeholder="Recipient Account / Username">' : ''}<input type="number" id="txAmount" class="input-stellar mb-4" placeholder="Amount USD"><input type="text" id="txNote" class="input-stellar mb-4" placeholder="Reference"><button class="btn-divine btn-transfer w-full py-3 rounded-2xl" onclick="executeTx()"><i class="fas fa-check-circle me-2"></i>Confirm</button>`;
+    new bootstrap.Modal(document.getElementById("txModal")).show();
+  }
+
+  function executeTx() {
+    const amount = parseFloat(document.getElementById("txAmount")?.value);
+    if (isNaN(amount) || amount <= 0) { showToast("Invalid amount", "error"); return; }
+    if (amount > currentTxAccount.balance) { showToast("Insufficient funds", "error"); return; }
+    if (currentTxType === "transfer") {
+      const ref = document.getElementById("recipientRef")?.value.trim();
+      if (!ref) { showToast("Recipient required", "error"); return; }
+      const recipient = accounts.find(a => a.accNumber === ref || a.username === ref);
+      if (!recipient) { showToast("Recipient not found", "error"); return; }
+      if (recipient.status !== "active") { showToast("Recipient inactive", "error"); return; }
+      if (recipient.holdTransfers) { showToast("Recipient has hold", "error"); return; }
+      currentTxAccount.balance -= amount; recipient.balance += amount; txCounter++;
+      transferLog.push({ from: currentTxAccount.name, to: recipient.name, amount, ref: document.getElementById("txNote")?.value || "", timestamp: new Date().toLocaleString() });
+      showToast(`✨ Transferred $${amount.toFixed(2)} to ${recipient.name}`, "success");
+    } else {
+      currentTxAccount.balance -= amount; txCounter++;
+      transferLog.push({ from: currentTxAccount.name, to: "WITHDRAWAL", amount, ref: document.getElementById("txNote")?.value || "", timestamp: new Date().toLocaleString() });
+      showToast(`💰 Withdrawn $${amount.toFixed(2)} from ${currentTxAccount.name}`, "success");
+    }
+    refreshAll();
+    bootstrap.Modal.getInstance(document.getElementById("txModal")).hide();
+  }
+
+  function openRegisterModal() { new bootstrap.Modal(document.getElementById("registerModal")).show(); }
+  function registerAccount() {
+    const name = document.getElementById("regName").value.trim(), uname = document.getElementById("regUsername").value.trim(), email = document.getElementById("regEmail").value.trim(), pwd = document.getElementById("regPassword").value, bal = parseFloat(document.getElementById("regBalance").value) || 0;
+    if (!name || !uname || !email || !pwd) { showToast("All fields required", "error"); return; }
+    const newId = Math.max(...accounts.map(a => a.id), 0) + 1;
+    const newAccNum = `BOA-${Math.floor(Math.random()*9000+1000)}-${String.fromCharCode(65+Math.floor(Math.random()*26))}${Math.floor(Math.random()*10)}`;
+    accounts.push({ id: newId, name, accNumber: newAccNum, username: uname, email, password: pwd, balance: bal, status: "pending", holdTransfers: false });
+    refreshAll(); showToast(`🌟 Account for ${name} created (pending approval)`, "success");
+    bootstrap.Modal.getInstance(document.getElementById("registerModal")).hide();
+    document.getElementById("regName").value = ""; document.getElementById("regUsername").value = ""; document.getElementById("regEmail").value = ""; document.getElementById("regPassword").value = "";
+  }
+
+  function setActiveTab(el, panelId) {
+    document.querySelectorAll(".sidebar-item").forEach(i => i.classList.remove("active"));
+    el.classList.add("active");
+    document.querySelectorAll(".panel").forEach(p => p.classList.add("hidden"));
+    if (panelId === "dashboard") { document.getElementById("dashboardPanel").classList.remove("hidden"); document.getElementById("pageTitle").innerText = "Command Center"; document.getElementById("pageSubtitle").innerText = "Omnipotent oversight"; }
+    else if (panelId === "approvals") { document.getElementById("approvalsPanel").classList.remove("hidden"); document.getElementById("pageTitle").innerText = "Approvals Hub"; document.getElementById("pageSubtitle").innerText = "Validate new registrations"; refreshAll(); }
+    else if (panelId === "accounts") { document.getElementById("accountsPanel").classList.remove("hidden"); document.getElementById("pageTitle").innerText = "Account Registry"; document.getElementById("pageSubtitle").innerText = "Complete database • Full control"; refreshAll(); }
+    else if (panelId === "transfers") { document.getElementById("transfersPanel").classList.remove("hidden"); document.getElementById("pageTitle").innerText = "Transfer Log"; document.getElementById("pageSubtitle").innerText = "Audit trail"; refreshAll(); }
+    if (window.innerWidth <= 768) toggleSidebar();
+  }
+  function toggleSidebar() { document.getElementById("sidebar").classList.toggle("open"); }
+  window.addEventListener("resize", () => { if (window.innerWidth > 768) document.getElementById("sidebar").classList.remove("open"); });
+</script>
+</body>
+</html>

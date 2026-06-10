@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Bank of America | Private Banking Admin Dashboard</title>
+  
+  <!-- Fonts + Tailwind + Bootstrap + Font Awesome + Chart.js -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(ellipse at 20% 30%, #0a0a1a, #050510);
+      min-height: 100vh;
+      color: #ffffff;
+    }
+    
+    /* Premium Glass Effect */
+    .glass-premium {
+      background: rgba(15, 25, 45, 0.55);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.5);
+    }
+    
+    .glass-card {
+      background: rgba(10, 20, 35, 0.65);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .glass-card:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 8px 25px -8px rgba(59, 130, 246, 0.2);
+    }
+    
+    /* Table Styling */
+    .admin-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+    .admin-table th {
+      text-align: left;
+      padding: 1rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8ba0bc;
+      background: transparent;
+    }
+    .admin-table td {
+      padding: 1rem 1rem;
+      background: rgba(15, 30, 50, 0.6);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(59, 130, 246, 0.15);
+      border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+    }
+    .admin-table tr td:first-child { border-left: 1px solid rgba(59, 130, 246, 0.15); border-radius: 16px 0 0 16px; }
+    .admin-table tr td:last-child { border-right: 1px solid rgba(59, 130, 246, 0.15); border-radius: 0 16px 16px 0; }
+    .admin-table tr:hover td {
+      background: rgba(30, 58, 138, 0.4);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+    
+    /* Button Styles */
+    .btn-action {
+      padding: 0.4rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      margin: 0 2px;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-activate { background: #10b981; color: white; }
+    .btn-activate:hover { background: #059669; transform: translateY(-1px); }
+    .btn-lock { background: #f59e0b; color: white; }
+    .btn-lock:hover { background: #d97706; }
+    .btn-suspend { background: #ef4444; color: white; }
+    .btn-suspend:hover { background: #dc2626; }
+    .btn-transfer { background: #3b82f6; color: white; }
+    .btn-transfer:hover { background: #2563eb; }
+    .btn-withdraw { background: #8b5cf6; color: white; }
+    .btn-withdraw:hover { background: #7c3aed; }
+    .btn-hold { background: #ec489a; color: white; }
+    .btn-hold:hover { background: #db2777; }
+    
+    /* Status Badges */
+    .status-active { background: #10b98120; color: #34d399; border: 1px solid #10b98140; border-radius: 40px; padding: 0.2rem 0.8rem; font-size: 0.7rem; font-weight: 600; }
+    .status-locked { background: #f59e0b20; color: #fbbf24; border: 1px solid #f59e0b40; border-radius: 40px; padding: 0.2rem 0.8rem; font-size: 0.7rem; }
+    .status-suspended { background: #ef444420; color: #f87171; border: 1px solid #ef444440; border-radius: 40px; padding: 0.2rem 0.8rem; font-size: 0.7rem; }
+    .status-pending { background: #8b5cf620; color: #c4b5fd; border: 1px solid #8b5cf640; border-radius: 40px; padding: 0.2rem 0.8rem; }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #1e293b; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+    
+    /* KPI Cards */
+    .kpi-card {
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.4), rgba(15, 30, 60, 0.6));
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 28px;
+      padding: 1.25rem;
+      transition: all 0.3s;
+    }
+    .kpi-card:hover { transform: translateY(-4px); border-color: #3b82f6; }
+    
+    /* Modal styling */
+    .modal-premium .modal-content {
+      background: rgba(20, 35, 55, 0.98);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 28px;
+      color: white;
+    }
+    
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <div class="fixed left-0 top-0 h-full w-72 glass-premium p-6 z-50">
+    <div class="flex items-center gap-3 mb-10">
+      <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center text-xl font-black shadow-lg">B</div>
+      <div>
+        <span class="font-bold text-xl tracking-tight">Bank of America</span>
+        <p class="text-[10px] text-blue-400 tracking-wider">ADMIN DASHBOARD</p>
+      </div>
+    </div>
+    <div class="space-y-2">
+      <div class="flex items-center gap-3 px-4 py-3 bg-blue-600/30 rounded-2xl border border-blue-500/30"><i class="fas fa-users"></i><span class="font-semibold">Account Management</span></div>
+      <div class="flex items-center gap-3 px-4 py-3 opacity-60 hover:opacity-100 transition"><i class="fas fa-chart-line"></i><span>Analytics</span></div>
+      <div class="flex items-center gap-3 px-4 py-3 opacity-60 hover:opacity-100 transition"><i class="fas fa-cog"></i><span>System Settings</span></div>
+    </div>
+    <div class="absolute bottom-6 left-6 right-6">
+      <div class="glass-card rounded-2xl p-4 text-center">
+        <i class="fas fa-shield-alt text-2xl text-blue-400 mb-2"></i>
+        <p class="text-xs opacity-70">Super Admin Access</p>
+        <p class="text-xs font-mono mt-1">Level 3 Security</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="ml-72 p-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-3xl font-bold tracking-tight">Account Administration</h1>
+        <p class="text-blue-300/70 text-sm mt-1">Manage all registered accounts, transfers, and security status</p>
+      </div>
+      <div class="flex gap-3">
+        <div class="glass-card rounded-2xl px-5 py-2 text-right">
+          <p class="text-[10px] uppercase tracking-wider text-blue-400">Total Balance</p>
+          <p class="text-2xl font-bold" id="totalSystemBalance">$0.00</p>
+        </div>
+        <div class="glass-card rounded-2xl px-5 py-2 text-right">
+          <p class="text-[10px] uppercase tracking-wider text-blue-400">Active Accounts</p>
+          <p class="text-2xl font-bold" id="activeAccountsCount">0</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI Cards Row -->
+    <div class="grid grid-cols-4 gap-5 mb-8">
+      <div class="kpi-card"><i class="fas fa-credit-card text-blue-400 text-2xl mb-2"></i><p class="text-2xl font-bold" id="totalAccountsKPI">0</p><p class="text-xs opacity-60">Total Accounts</p></div>
+      <div class="kpi-card"><i class="fas fa-exchange-alt text-green-400 text-2xl mb-2"></i><p class="text-2xl font-bold" id="totalTransfersKPI">0</p><p class="text-xs opacity-60">Today's Transfers</p></div>
+      <div class="kpi-card"><i class="fas fa-lock text-orange-400 text-2xl mb-2"></i><p class="text-2xl font-bold" id="lockedAccountsKPI">0</p><p class="text-xs opacity-60">Locked/Suspended</p></div>
+      <div class="kpi-card"><i class="fas fa-chart-line text-purple-400 text-2xl mb-2"></i><p class="text-2xl font-bold" id="pendingApprovalsKPI">0</p><p class="text-xs opacity-60">Pending Actions</p></div>
+    </div>
+
+    <!-- Accounts Table -->
+    <div class="glass-card rounded-3xl p-6 overflow-x-auto">
+      <div class="flex justify-between items-center mb-5">
+        <h2 class="font-bold text-xl"><i class="fas fa-table-list mr-2 text-blue-400"></i> Registered Accounts</h2>
+        <button class="btn-activate btn-action px-4 py-2" onclick="openRegisterModal()"><i class="fas fa-user-plus mr-1"></i> New Account</button>
+      </div>
+      <table class="admin-table w-full text-sm">
+        <thead>
+          <tr><th>Name</th><th>Account No.</th><th>Username</th><th>Email</th><th>Password</th><th>Balance</th><th>Status</th><th>Actions</th><th>Controls</th></tr>
+        </thead>
+        <tbody id="accountsTableBody">
+          <!-- Dynamic rows from JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Transfer/Withdraw Modal -->
+  <div class="modal fade" id="transactionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-premium">
+        <div class="modal-header border-blue-800/50"><h5 class="modal-title" id="modalTitle">Transaction</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body" id="modalBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register New Account Modal -->
+  <div class="modal fade" id="registerAccountModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-premium">
+        <div class="modal-header border-blue-800/50"><h5 class="modal-title"><i class="fas fa-user-plus mr-2"></i>Register New Account</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <input type="text" id="regFullName" class="form-control bg-slate-800/50 border-blue-500/30 text-white rounded-xl mb-3 p-3" placeholder="Full Name">
+          <input type="text" id="regUsername" class="form-control bg-slate-800/50 border-blue-500/30 text-white rounded-xl mb-3 p-3" placeholder="Username">
+          <input type="email" id="regEmail" class="form-control bg-slate-800/50 border-blue-500/30 text-white rounded-xl mb-3 p-3" placeholder="Email">
+          <input type="password" id="regPassword" class="form-control bg-slate-800/50 border-blue-500/30 text-white rounded-xl mb-3 p-3" placeholder="Password">
+          <input type="number" id="regBalance" class="form-control bg-slate-800/50 border-blue-500/30 text-white rounded-xl mb-3 p-3" placeholder="Initial Balance" value="0">
+          <button class="btn-activate w-full py-3 rounded-xl" onclick="registerNewAccount()">Create Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample Account Data
+    let accounts = [
+      { id: 1, name: "James A. Morgan", accNumber: "BOA-1001-8872", username: "james.morgan", email: "james@wealth.com", password: "pass1234", balance: 28450.75, status: "active", holdTransfers: false },
+      { id: 2, name: "Sarah Chen", accNumber: "BOA-1002-4451", username: "sarah.chen", email: "sarah.chen@email.com", password: "secure789", balance: 127890.32, status: "active", holdTransfers: false },
+      { id: 3, name: "Michael Rivera", accNumber: "BOA-1003-9932", username: "mrivera", email: "michael.r@bank.com", password: "mike2024", balance: 5432.19, status: "locked", holdTransfers: false },
+      { id: 4, name: "Elena Vasquez", accNumber: "BOA-1004-2276", username: "elena.v", email: "elena.vasquez@pm.me", password: "elen@123", balance: 34900.00, status: "suspended", holdTransfers: true },
+      { id: 5, name: "William Hayes", accNumber: "BOA-1005-6610", username: "will.hayes", email: "will.hayes@advisor.com", password: "willPass99", balance: 198200.50, status: "active", holdTransfers: false },
+      { id: 6, name: "Priya Kapoor", accNumber: "BOA-1006-5543", username: "priya.k", email: "priya.kapoor@finance.com", password: "priya@1234", balance: 7450.25, status: "pending", holdTransfers: false }
+    ];
+
+    let transferHistoryCount = 0;
+
+    function renderTable() {
+      const tbody = document.getElementById('accountsTableBody');
+      tbody.innerHTML = '';
+      let totalBal = 0, activeCount = 0, lockedCount = 0, pendingActions = 0;
+      accounts.forEach(acc => {
+        totalBal += acc.balance;
+        if (acc.status === 'active') activeCount++;
+        if (acc.status === 'locked' || acc.status === 'suspended') lockedCount++;
+        if (acc.status === 'pending') pendingActions++;
+        const statusClass = acc.status === 'active' ? 'status-active' : (acc.status === 'locked' ? 'status-locked' : (acc.status === 'suspended' ? 'status-suspended' : 'status-pending'));
+        const statusText = acc.status.charAt(0).toUpperCase() + acc.status.slice(1);
+        const holdBadge = acc.holdTransfers ? '<span class="text-pink-400 text-xs ml-1"><i class="fas fa-ban"></i> Hold</span>' : '';
+        
+        tbody.innerHTML += `<tr>
+          <td class="font-semibold">${acc.name}</td>
+          <td class="font-mono text-xs">${acc.accNumber}</td>
+          <td>${acc.username}</td>
+          <td>${acc.email}</td>
+          <td class="font-mono text-xs">••••••</td>
+          <td class="font-bold text-green-400">$${acc.balance.toLocaleString()}</td>
+          <td><span class="${statusClass}">${statusText}</span> ${holdBadge}</td>
+          <td>
+            <button class="btn-activate btn-action" onclick="toggleAccountStatus(${acc.id}, 'activate')" ${acc.status === 'active' ? 'disabled style="opacity:0.5"' : ''}>Activate</button>
+            <button class="btn-lock btn-action" onclick="toggleAccountStatus(${acc.id}, 'lock')" ${acc.status === 'locked' ? 'disabled style="opacity:0.5"' : ''}>Lock</button>
+            <button class="btn-suspend btn-action" onclick="toggleAccountStatus(${acc.id}, 'suspend')" ${acc.status === 'suspended' ? 'disabled style="opacity:0.5"' : ''}>Suspend</button>
+          </td>
+          <td>
+            <button class="btn-transfer btn-action" onclick="openTransactionModal('transfer', ${acc.id})"><i class="fas fa-arrow-right"></i> Transfer</button>
+            <button class="btn-withdraw btn-action" onclick="openTransactionModal('withdraw', ${acc.id})"><i class="fas fa-hand-holding-usd"></i> Withdraw</button>
+            <button class="btn-hold btn-action" onclick="toggleHoldTransfers(${acc.id})"><i class="fas fa-pause-circle"></i> ${acc.holdTransfers ? 'Release' : 'Hold'}</button>
+          </td>
+        </tr>`;
+      });
+      document.getElementById('totalSystemBalance').innerHTML = `$${totalBal.toLocaleString()}`;
+      document.getElementById('activeAccountsCount').innerHTML = activeCount;
+      document.getElementById('totalAccountsKPI').innerHTML = accounts.length;
+      document.getElementById('lockedAccountsKPI').innerHTML = lockedCount;
+      document.getElementById('pendingApprovalsKPI').innerHTML = pendingActions;
+      document.getElementById('totalTransfersKPI').innerHTML = transferHistoryCount;
+    }
+
+    function toggleAccountStatus(accountId, action) {
+      const acc = accounts.find(a => a.id === accountId);
+      if (!acc) return;
+      if (action === 'activate') acc.status = 'active';
+      else if (action === 'lock') acc.status = 'locked';
+      else if (action === 'suspend') acc.status = 'suspended';
+      renderTable();
+      showToast(`Account ${acc.name} has been ${action}ed.`, 'info');
+    }
+
+    function toggleHoldTransfers(accountId) {
+      const acc = accounts.find(a => a.id === accountId);
+      if (acc) {
+        acc.holdTransfers = !acc.holdTransfers;
+        renderTable();
+        showToast(`Transfer hold ${acc.holdTransfers ? 'enabled' : 'disabled'} for ${acc.name}.`, 'warning');
+      }
+    }
+
+    let currentTransactionAccount = null;
+    let currentTransactionType = null;
+
+    function openTransactionModal(type, accountId) {
+      const acc = accounts.find(a => a.id === accountId);
+      if (!acc) return;
+      if (acc.holdTransfers && (type === 'transfer' || type === 'withdraw')) {
+        showToast(`Transfers are currently HOLD for this account. Release hold first.`, 'error');
+        return;
+      }
+      if (acc.status !== 'active') {
+        showToast(`Account is ${acc.status}. Cannot perform transactions.`, 'error');
+        return;
+      }
+      currentTransactionAccount = acc;
+      currentTransactionType = type;
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+      modalTitle.innerText = type === 'transfer' ? '💰 Transfer Funds' : '💸 Withdraw Funds';
+      modalBody.innerHTML = `
+        <div class="mb-4">
+          <p class="text-sm opacity-70">Account: <span class="font-bold text-white">${acc.name}</span> (${acc.accNumber})</p>
+          <p class="text-sm opacity-70">Current Balance: <span class="text-green-400 font-bold">$${acc.balance.toLocaleString()}</span></p>
+        </div>
+        ${type === 'transfer' ? '<input type="text" id="transferToAccount" class="form-control bg-slate-800/50 border-blue-500/30 text-white rounded-xl mb-3 p-3" placeholder="Recipient Account Number / Username">' : ''}
+        <input type="number" id="transactionAmount" class="form-control bg-slate-800/50 border-blue-500/30 text-white rounded-xl mb-3 p-3" placeholder="Amount in USD">
+        <input type="text" id="transactionNote" class="form-control bg-slate-800/50 border-blue-500/30 text-white rounded-xl mb-3 p-3" placeholder="Reference (optional)">
+        <button class="btn-transfer w-full py-3 rounded-xl" onclick="executeTransaction()">Confirm ${type === 'transfer' ? 'Transfer' : 'Withdrawal'}</button>
+      `;
+      new bootstrap.Modal(document.getElementById('transactionModal')).show();
+    }
+
+    function executeTransaction() {
+      const amount = parseFloat(document.getElementById('transactionAmount').value);
+      if (isNaN(amount) || amount <= 0) { showToast('Invalid amount', 'error'); return; }
+      if (amount > currentTransactionAccount.balance) { showToast('Insufficient funds', 'error'); return; }
+      
+      if (currentTransactionType === 'transfer') {
+        const recipientRef = document.getElementById('transferToAccount').value;
+        if (!recipientRef) { showToast('Recipient required', 'error'); return; }
+        const recipient = accounts.find(a => a.accNumber === recipientRef || a.username === recipientRef);
+        if (!recipient) { showToast('Recipient not found', 'error'); return; }
+        if (recipient.status !== 'active') { showToast('Recipient account is not active', 'error'); return; }
+        if (recipient.holdTransfers) { showToast('Recipient has transfer holds', 'error'); return; }
+        currentTransactionAccount.balance -= amount;
+        recipient.balance += amount;
+        transferHistoryCount++;
+        showToast(`Transferred $${amount.toFixed(2)} to ${recipient.name}.`, 'success');
+      } else {
+        currentTransactionAccount.balance -= amount;
+        showToast(`Withdrawn $${amount.toFixed(2)} from ${currentTransactionAccount.name}.`, 'success');
+      }
+      renderTable();
+      bootstrap.Modal.getInstance(document.getElementById('transactionModal')).hide();
+    }
+
+    function openRegisterModal() {
+      new bootstrap.Modal(document.getElementById('registerAccountModal')).show();
+    }
+
+    function registerNewAccount() {
+      const name = document.getElementById('regFullName').value.trim();
+      const username = document.getElementById('regUsername').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const balance = parseFloat(document.getElementById('regBalance').value) || 0;
+      if (!name || !username || !email || !password) { showToast('Please fill all fields', 'error'); return; }
+      const newId = accounts.length + 1;
+      const newAccNumber = `BOA-${Math.floor(Math.random() * 9000 + 1000)}-${Math.floor(Math.random() * 9000 + 1000)}`;
+      accounts.push({
+        id: newId, name, accNumber: newAccNumber, username, email, password, balance, status: 'pending', holdTransfers: false
+      });
+      renderTable();
+      showToast(`Account for ${name} registered successfully. Status: Pending Approval.`, 'success');
+      bootstrap.Modal.getInstance(document.getElementById('registerAccountModal')).hide();
+      document.getElementById('regFullName').value = '';
+      document.getElementById('regUsername').value = '';
+      document.getElementById('regEmail').value = '';
+      document.getElementById('regPassword').value = '';
+    }
+
+    function showToast(msg, type) {
+      const toastDiv = document.createElement('div');
+      toastDiv.className = `fixed bottom-5 right-5 glass-premium rounded-xl px-5 py-3 text-sm z-50 border-l-4 ${type === 'error' ? 'border-red-500' : type === 'success' ? 'border-green-500' : 'border-blue-500'} fade-in`;
+      toastDiv.innerHTML = `<i class="fas ${type === 'error' ? 'fa-circle-exclamation' : type === 'success' ? 'fa-circle-check' : 'fa-info-circle'} mr-2"></i>${msg}`;
+      document.body.appendChild(toastDiv);
+      setTimeout(() => toastDiv.remove(), 3500);
+    }
+
+    // Initial render
+    renderTable();
+  </script>
+</body>
+</html>

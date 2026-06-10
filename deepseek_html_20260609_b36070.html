@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Bank of America | Private Banking - John J. Irwin</title>
+  
+  <!-- Tailwind + Bootstrap + Chart.js + Font Awesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #0a0a0a, #111827);
+      color: white;
+      transition: background 0.3s, color 0.2s;
+      overflow-x: hidden;
+    }
+    /* Light mode */
+    .light body {
+      background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
+      color: #0f172a;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.3);
+      transition: all 0.3s;
+    }
+    .light .glass {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 15px 30px -10px rgba(0,0,0,0.08);
+    }
+    /* Sidebar styles */
+    .sidebar-item {
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border-radius: 1.2rem;
+    }
+    .sidebar-item:hover {
+      background: rgba(227, 24, 55, 0.15);
+      transform: translateX(6px);
+    }
+    .sidebar-item.active {
+      background: #e31837;
+      color: white;
+      box-shadow: 0 8px 20px -8px rgba(227,24,55,0.4);
+    }
+    /* Card hover effects */
+    .card-hover {
+      transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.2s;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 40px -15px rgba(0,0,0,0.4);
+    }
+    /* Premium Inputs */
+    .premium-input {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 1.2rem;
+      padding: 0.9rem 1.2rem;
+      color: white;
+      transition: all 0.2s;
+    }
+    .premium-input:focus {
+      outline: none;
+      border-color: #e31837;
+      box-shadow: 0 0 0 3px rgba(227,24,55,0.2);
+    }
+    .light .premium-input {
+      background: rgba(0,0,0,0.04);
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+    /* Custom scroll */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #1e293b; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #e31837; border-radius: 10px; }
+    .light ::-webkit-scrollbar-track { background: #e2e8f0; }
+    
+    /* Mobile sidebar overlay */
+    .mobile-sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+    }
+    .mobile-sidebar.open {
+      transform: translateX(0);
+    }
+    .overlay {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      transition: opacity 0.3s;
+    }
+    @media (min-width: 1024px) {
+      .mobile-sidebar { display: none; }
+      .desktop-sidebar { display: flex; }
+    }
+    @media (max-width: 1023px) {
+      .desktop-sidebar { display: none; }
+      .mobile-sidebar { display: flex; }
+      main { margin-left: 0 !important; }
+      footer { left: 0 !important; }
+    }
+    /* Bank Card 3D tilt */
+    .bank-card {
+      transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      cursor: pointer;
+    }
+    .btn-close-white {
+      filter: invert(1);
+    }
+    .light .btn-close-white { filter: invert(0); }
+  </style>
+</head>
+<body>
+
+  <!-- DESKTOP SIDEBAR (visible lg+) -->
+  <aside class="desktop-sidebar fixed left-0 top-0 h-screen w-72 glass p-6 flex flex-col z-50 shadow-2xl">
+    <div class="flex items-center gap-3 mb-12 pl-2">
+      <div class="w-12 h-12 bg-[#e31837] rounded-2xl flex items-center justify-center shadow-lg"><i class="fas fa-landmark text-white text-2xl"></i></div>
+      <div><span class="font-black text-2xl tracking-tight">Bank of America</span><p class="text-xs text-white/60">Private Client</p></div>
+    </div>
+    <nav class="flex-1 space-y-2">
+      <div onclick="switchSection('overview')" class="sidebar-item flex items-center gap-4 px-5 py-3.5 rounded-2xl font-semibold active" data-section="overview"><i class="fas fa-chart-pie w-6"></i><span>Overview</span></div>
+      <div onclick="switchSection('transfers')" class="sidebar-item flex items-center gap-4 px-5 py-3.5 rounded-2xl font-semibold" data-section="transfers"><i class="fas fa-exchange-alt w-6"></i><span>Transfers</span></div>
+      <div onclick="switchSection('profile')" class="sidebar-item flex items-center gap-4 px-5 py-3.5 rounded-2xl font-semibold" data-section="profile"><i class="fas fa-user-circle w-6"></i><span>Profile</span></div>
+      <div onclick="switchSection('settings')" class="sidebar-item flex items-center gap-4 px-5 py-3.5 rounded-2xl font-semibold" data-section="settings"><i class="fas fa-sliders-h w-6"></i><span>Settings</span></div>
+      <div class="border-t border-white/20 my-6"></div>
+      <div onclick="logout()" class="sidebar-item flex items-center gap-4 px-5 py-3.5 rounded-2xl font-semibold text-red-400 hover:bg-red-500/20"><i class="fas fa-sign-out-alt w-6"></i><span>Logout</span></div>
+    </nav>
+    <div class="pt-6 border-t border-white/20 mt-auto"><button onclick="toggleTheme()" class="flex items-center gap-3 w-full hover:bg-white/10 rounded-2xl px-5 py-3 transition"><i id="themeIcon" class="fas fa-moon"></i><span id="themeText">Light Mode</span></button></div>
+  </aside>
+
+  <!-- MOBILE SIDEBAR (drawer) -->
+  <div id="mobileSidebar" class="mobile-sidebar fixed top-0 left-0 h-full w-72 glass p-6 flex flex-col z-[1001] shadow-2xl">
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center gap-3"><div class="w-10 h-10 bg-[#e31837] rounded-xl flex items-center justify-center"><i class="fas fa-landmark text-white"></i></div><span class="font-bold text-xl">Bank of America</span></div>
+      <button onclick="closeMobileSidebar()"><i class="fas fa-times text-xl text-white/70"></i></button>
+    </div>
+    <nav class="flex-1 space-y-2">
+      <div onclick="switchSection('overview'); closeMobileSidebar();" class="sidebar-item flex items-center gap-4 px-5 py-3.5 rounded-2xl"><i class="fas fa-chart-pie w-6"></i><span>Overview</span></div>
+      <div onclick="switchSection('transfers'); closeMobileSidebar();" class="sidebar-item flex items-center gap-4 px-5 py-3.5 rounded-2xl"><i class="fas fa-exchange-alt w-6"></i><span>Transfers</span></div>
+      <div onclick="switchSection('profile'); closeMobileSidebar();" class="sidebar-item flex items-center gap-4 px-5 py-3.5 rounded-2xl"><i class="fas fa-user-circle w-6"></i><span>Profile</span></div>
+      <div onclick="switchSection('settings'); closeMobileSidebar();" class="sidebar-item flex items-center gap-4 px-5 py-3.5 rounded-2xl"><i class="fas fa-sliders-h w-6"></i><span>Settings</span></div>
+      <div class="border-t border-white/20 my-6"></div>
+      <div onclick="logout()" class="sidebar-item flex items-center gap-4 px-5 py-3.5 rounded-2xl text-red-400"><i class="fas fa-sign-out-alt w-6"></i><span>Logout</span></div>
+    </nav>
+    <button onclick="toggleTheme(); closeMobileSidebar();" class="flex items-center gap-3 w-full hover:bg-white/10 rounded-2xl px-5 py-3 transition mt-4"><i class="fas fa-moon"></i><span>Switch Theme</span></button>
+  </div>
+  <div id="overlay" class="overlay fixed inset-0 bg-black/50 hidden z-[1000]" onclick="closeMobileSidebar()"></div>
+
+  <!-- Mobile top bar -->
+  <div class="lg:hidden fixed top-0 left-0 right-0 glass p-4 flex justify-between items-center z-40">
+    <button onclick="openMobileSidebar()"><i class="fas fa-bars text-2xl"></i></button>
+    <div class="flex items-center gap-2"><div class="w-8 h-8 bg-[#e31837] rounded-lg flex items-center justify-center"><i class="fas fa-landmark text-white text-sm"></i></div><span class="font-bold">BOFA Private</span></div>
+    <i class="fas fa-bell text-white/60"></i>
+  </div>
+
+  <!-- MAIN CONTENT (with top padding for mobile) -->
+  <main class="lg:ml-72 p-6 md:p-8 pb-32 pt-20 lg:pt-8">
+    
+    <!-- OVERVIEW SECTION -->
+    <div id="overview-section" class="section-content">
+      <div class="flex flex-wrap justify-between items-end mb-10">
+        <div><h1 class="text-3xl md:text-5xl font-black tracking-tight">Welcome, John J. Irwin</h1><p class="text-white/60 text-lg mt-1">Private Wealth · Priority Access</p></div>
+        <div class="text-right"><p class="text-sm uppercase tracking-wide text-white/50">Total Net Worth</p><h2 id="totalNetWorth" class="text-4xl md:text-6xl font-black text-[#e31837]">$47,287,501.67</h2></div>
+      </div>
+
+      <!-- Premium Cards Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div class="bank-card relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-800 to-black shadow-2xl h-64 p-6 flex flex-col justify-between border border-white/20" style="background: linear-gradient(135deg, #1a1a2e, #0f0f1f);">
+          <div class="absolute top-0 right-0 w-36 h-36 bg-[#e31837] rounded-full blur-3xl opacity-20"></div>
+          <div class="flex justify-between items-start"><div><p class="text-white/50 text-xs tracking-wider">PLATINUM PRIVATE</p><p class="text-2xl font-mono tracking-wider mt-3">****  ****  ****  8102</p></div><i class="fab fa-cc-visa text-5xl text-white/90"></i></div>
+          <div class="flex justify-between items-end"><div><p class="text-white/70 text-sm">Cardholder</p><p class="font-bold text-lg">JOHN J. IRWIN</p><p class="text-xs text-white/50">Valid Thru 09/29</p></div><div class="flex gap-1"><div class="w-8 h-8 bg-white/20 rounded-full"></div><div class="w-8 h-8 bg-white/20 rounded-full -ml-3"></div></div></div>
+          <div class="absolute bottom-4 left-6 flex items-center gap-2"><i class="fas fa-microchip text-white/40 text-2xl"></i><span class="text-[10px] text-white/30">SECURE CHIP</span></div>
+        </div>
+        <div class="bank-card relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#c8102e] to-[#8a0c1f] shadow-2xl h-64 p-6 flex flex-col justify-between border border-white/20">
+          <div class="absolute top-0 left-0 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+          <div class="flex justify-between items-start"><div><p class="text-white/70 text-xs tracking-wider">WORLD ELITE • BLACK EDITION</p><p class="text-2xl font-mono tracking-wider mt-3">****  ****  ****  4903</p></div><i class="fab fa-cc-mastercard text-5xl text-white/90"></i></div>
+          <div class="flex justify-between items-end"><div><p class="text-white/80 text-sm">Cardholder</p><p class="font-bold text-lg">JOHN J. IRWIN</p><p class="text-xs text-white/60">Valid Thru 12/28</p></div><div class="flex gap-1"><div class="w-8 h-8 bg-white/30 rounded-full"></div><div class="w-8 h-8 bg-white/30 rounded-full -ml-3"></div></div></div>
+          <div class="absolute bottom-4 left-6"><i class="fas fa-wifi text-white/30 text-xl"></i></div>
+        </div>
+      </div>
+
+      <!-- Balances + ROI -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="glass rounded-2xl p-6 card-hover"><i class="fas fa-piggy-bank text-3xl text-emerald-400 mb-3"></i><p class="text-white/60 text-sm">Savings Account</p><p id="savingsBalance" class="text-3xl font-bold mt-1">$28,372,501.00</p><p class="text-emerald-400 text-xs mt-2">4.85% APY · High Yield</p></div>
+        <div class="glass rounded-2xl p-6 card-hover"><i class="fas fa-wallet text-3xl text-blue-400 mb-3"></i><p class="text-white/60 text-sm">Checking Account</p><p id="checkingBalance" class="text-3xl font-bold mt-1">$18,915,000.67</p><p class="text-white/40 text-xs mt-2">No fees · Unlimited transactions</p></div>
+        <div class="glass rounded-2xl p-6 card-hover"><i class="fas fa-chart-line text-3xl text-violet-400 mb-3"></i><p class="text-white/60 text-sm">Portfolio ROI (12M)</p><p id="roiValue" class="text-4xl font-bold text-emerald-400 mt-1">+14.2%</p><p class="text-white/40 text-xs mt-2">Outperforming S&P 500</p></div>
+      </div>
+
+      <!-- Charts + Recent -->
+      <div class="grid grid-cols-12 gap-6">
+        <div class="col-span-12 lg:col-span-7 glass rounded-2xl p-6"><h4 class="font-bold text-xl mb-4">Wealth Evolution</h4><canvas id="wealthChart" height="150"></canvas></div>
+        <div class="col-span-12 lg:col-span-5 glass rounded-2xl p-6"><h4 class="font-bold text-xl mb-4 flex justify-between">Recent Transactions <i class="fas fa-history text-white/40"></i></h4><div id="recentTransactionsList" class="space-y-4 max-h-64 overflow-y-auto pr-2"></div></div>
+      </div>
+    </div>
+
+    <!-- TRANSFERS SECTION -->
+    <div id="transfers-section" class="section-content hidden">
+      <h2 class="text-3xl font-bold mb-6">Secure Transfers</h2>
+      <div class="glass rounded-2xl p-8">
+        <div class="mb-6"><label class="block font-semibold mb-2">From Account</label><select id="transferFromAccount" class="premium-input w-full"><option value="savings">Savings ($28,372,501.00)</option><option value="checking">Checking ($18,915,000.67)</option></select></div>
+        <div class="mb-6"><label class="block font-semibold mb-2">Recipient (Email or Account #)</label><input type="text" id="recipientEmail" class="premium-input w-full" placeholder="sarah.williams@example.com"></div>
+        <div class="mb-6"><label class="block font-semibold mb-2">Amount (USD)</label><input type="number" id="transferAmount" class="premium-input w-full" placeholder="0.00"></div>
+        <div class="mb-6"><label class="block font-semibold mb-2">Note (optional)</label><textarea id="transferNote" rows="2" class="premium-input w-full" placeholder="Reason for transfer"></textarea></div>
+        <button onclick="initiateTransfer()" class="bg-[#e31837] hover:bg-[#c0102a] px-8 py-3 rounded-xl font-bold transition w-full">Review Transfer →</button>
+      </div>
+      <div class="mt-8 glass rounded-2xl p-6"><h4 class="font-bold text-lg mb-4">Recent Beneficiaries</h4><div class="flex flex-wrap gap-3"><div class="bg-white/10 rounded-full px-4 py-2 text-sm">Sarah Chen · sarah.chen@wealth.com</div><div class="bg-white/10 rounded-full px-4 py-2 text-sm">Irwin Foundation · foundation@boa.com</div><div class="bg-white/10 rounded-full px-4 py-2 text-sm">James Private Trust</div></div></div>
+    </div>
+
+    <!-- PROFILE SECTION -->
+    <div id="profile-section" class="section-content hidden">
+      <h2 class="text-3xl font-bold mb-6">Client Profile</h2>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="glass rounded-2xl p-8"><div class="flex items-center gap-5 mb-6"><div class="w-20 h-20 bg-[#e31837] rounded-2xl flex items-center justify-center text-3xl font-bold">JI</div><div><h3 class="text-2xl font-bold">John J. Irwin</h3><p class="text-white/60">Private Wealth · Tier 1</p></div></div><div class="space-y-4"><div><i class="fas fa-envelope w-6 text-[#e31837]"></i> john.irwin@privatebanking.com</div><div><i class="fas fa-phone-alt w-6 text-[#e31837]"></i> +1 (212) 555-8901</div><div><i class="fas fa-map-marker-alt w-6 text-[#e31837]"></i> 1 Bank of America Tower, New York, NY 10036</div><div><i class="fas fa-calendar-alt w-6 text-[#e31837]"></i> Member since 2003 · Platinum Concierge</div></div></div>
+        <div class="glass rounded-2xl p-8"><h4 class="font-bold text-xl mb-4">Linked Accounts & Cards</h4><ul class="space-y-3"><li class="flex justify-between"><span>Visa Infinite Private</span><span class="text-white/70">•••• 8102</span></li><li class="flex justify-between"><span>Mastercard World Elite</span><span class="text-white/70">•••• 4903</span></li><li class="flex justify-between"><span>High Yield Savings</span><span class="text-white/70">#8921-0034</span></li></ul></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS SECTION -->
+    <div id="settings-section" class="section-content hidden">
+      <h2 class="text-3xl font-bold mb-6">Account Settings</h2>
+      <div class="glass rounded-2xl p-8 max-w-2xl"><div class="space-y-6"><div class="flex justify-between items-center"><div><span class="font-semibold">Two-Factor Authentication</span><p class="text-sm text-white/50">Add extra layer of security</p></div><button class="bg-[#e31837] px-4 py-2 rounded-xl text-sm">Enable</button></div><div class="flex justify-between items-center"><div><span class="font-semibold">Notification Preferences</span><p class="text-sm text-white/50">Email & SMS alerts for transfers</p></div><button class="bg-white/10 px-4 py-2 rounded-xl text-sm">Configure</button></div><div class="flex justify-between items-center"><div><span class="font-semibold">Change Password</span><p class="text-sm text-white/50">Update your master password</p></div><button class="bg-white/10 px-4 py-2 rounded-xl text-sm">Update</button></div><div class="pt-4 border-t border-white/20"><button onclick="logout()" class="text-red-400 font-semibold flex items-center gap-2"><i class="fas fa-sign-out-alt"></i> Logout from all devices</button></div></div></div>
+    </div>
+  </main>
+
+  <!-- PREMIUM FOOTER with Contact Number & Icons -->
+  <footer class="fixed bottom-0 left-0 lg:left-72 right-0 glass border-t border-white/10 py-5 px-6 z-40 text-sm backdrop-blur-md">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-6 flex-wrap justify-center">
+        <a href="#" class="hover:text-[#e31837] transition"><i class="fab fa-twitter"></i> Twitter</a>
+        <a href="#" class="hover:text-[#e31837] transition"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        <a href="#" class="hover:text-[#e31837] transition"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="#" class="hover:text-[#e31837] transition"><i class="fas fa-envelope"></i> Support</a>
+      </div>
+      <div class="flex items-center gap-3 text-sm font-mono bg-white/10 px-4 py-2 rounded-full">
+        <i class="fas fa-phone-alt text-[#e31837]"></i>
+        <span class="font-bold tracking-wide">+1 509 616 4403</span>
+        <span class="text-white/50 text-xs">Private Banking Hotline</span>
+      </div>
+      <div class="text-white/50 text-xs">© 2026 Bank of America Corp. All rights reserved. FDIC Insured.</div>
+    </div>
+  </footer>
+
+  <!-- Transfer Confirmation Modal -->
+  <div class="modal fade" id="transferConfirmModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content glass border-0 text-white"><div class="modal-header border-0"><h5 class="modal-title fw-bold">Confirm Transfer</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><div id="confirmDetails" class="space-y-3"></div></div><div class="modal-footer border-0"><button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button id="finalTransferBtn" class="btn btn-danger">Send Money</button></div></div></div></div>
+  
+  <div id="toastMsg" class="fixed bottom-24 right-6 z-50 hidden glass px-6 py-3 rounded-xl shadow-2xl border-l-4 border-[#e31837]"></div>
+
+  <script>
+    // HARD DATA: John J. Irwin exact balances
+    const TOTAL_BALANCE = 47287501.67;
+    const SAVINGS_BALANCE = 28372501.00;
+    const CHECKING_BALANCE = 18915000.67;
+    const ROI_PERCENT = 14.2;
+    const transactionsList = [
+      { date: "Jun 10, 2026", desc: "Dividend Payout - AAPL", amount: 189000, type: "credit" },
+      { date: "Jun 8, 2026", desc: "Wire to Irwin Foundation", amount: 250000, type: "debit" },
+      { date: "Jun 5, 2026", desc: "Real Estate Dividend", amount: 42500, type: "credit" },
+      { date: "Jun 1, 2026", desc: "Private Jet Lease", amount: 128500, type: "debit" },
+      { date: "May 28, 2026", desc: "Advisory Fee Credit", amount: 75000, type: "credit" }
+    ];
+    const wealthData = [38700000, 40200000, 41850000, 43520000, 45200000, 47287501];
+    
+    function formatMoney(value) { return "$" + value.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}); }
+    function updateUI() {
+      document.getElementById('totalNetWorth').innerText = formatMoney(TOTAL_BALANCE);
+      document.getElementById('savingsBalance').innerText = formatMoney(SAVINGS_BALANCE);
+      document.getElementById('checkingBalance').innerText = formatMoney(CHECKING_BALANCE);
+      document.getElementById('roiValue').innerHTML = `+${ROI_PERCENT}%`;
+      const container = document.getElementById('recentTransactionsList');
+      if (container) container.innerHTML = transactionsList.map(tx => `<div class="flex justify-between items-center p-3 glass rounded-xl"><div><span class="font-semibold">${tx.desc}</span><p class="text-xs text-white/40">${tx.date}</p></div><div class="font-bold ${tx.type === 'credit' ? 'text-emerald-400' : 'text-red-400'}">${tx.type === 'credit' ? '+' : '-'} ${formatMoney(Math.abs(tx.amount))}</div></div>`).join('');
+      if (window.wealthChartInstance) window.wealthChartInstance.destroy();
+      const ctx = document.getElementById('wealthChart').getContext('2d');
+      window.wealthChartInstance = new Chart(ctx, { type: 'line', data: { labels: ['Jan','Feb','Mar','Apr','May','Jun'], datasets: [{ label: 'Net Worth', data: wealthData, borderColor: '#e31837', borderWidth: 4, tension: 0.3, fill: false, pointBackgroundColor: '#e31837' }] }, options: { responsive: true, plugins: { legend: { labels: { color: '#cbd5e1' } } }, scales: { y: { ticks: { callback: v => '$' + (v/1e6).toFixed(0)+'M', color: '#94a3b8' } } } } });
+    }
+    
+    function switchSection(sectionId) {
+      document.querySelectorAll('.section-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`${sectionId}-section`).classList.remove('hidden');
+      document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+      document.querySelector(`.sidebar-item[data-section="${sectionId}"]`)?.classList.add('active');
+      if (sectionId === 'overview' && window.wealthChartInstance) window.wealthChartInstance.update();
+    }
+    
+    function initiateTransfer() {
+      const fromAcc = document.getElementById('transferFromAccount').value;
+      const recipient = document.getElementById('recipientEmail').value.trim();
+      const amount = parseFloat(document.getElementById('transferAmount').value);
+      const note = document.getElementById('transferNote').value;
+      if (!recipient || isNaN(amount) || amount <= 0) { showToast('❌ Valid recipient & amount required', 'error'); return; }
+      let available = fromAcc === 'savings' ? SAVINGS_BALANCE : CHECKING_BALANCE;
+      if (amount > available) { showToast(`Insufficient funds. Max: ${formatMoney(available)}`, 'error'); return; }
+      const confirmDiv = document.getElementById('confirmDetails');
+      confirmDiv.innerHTML = `<div class="flex justify-between"><span>From:</span><strong>${fromAcc === 'savings' ? 'Savings' : 'Checking'}</strong></div><div class="flex justify-between"><span>Recipient:</span><strong>${recipient}</strong></div><div class="flex justify-between"><span>Amount:</span><strong class="text-[#e31837] text-xl">${formatMoney(amount)}</strong></div><div class="flex justify-between"><span>Note:</span><strong>${note || '—'}</strong></div>`;
+      const modal = new bootstrap.Modal(document.getElementById('transferConfirmModal'));
+      modal.show();
+      document.getElementById('finalTransferBtn').onclick = () => { showToast(`✅ Transfer of ${formatMoney(amount)} to ${recipient} initiated. Reference: BOA-${Math.floor(Math.random()*10000)}`, 'success'); modal.hide(); document.getElementById('transferAmount').value = ''; document.getElementById('recipientEmail').value = ''; document.getElementById('transferNote').value = ''; };
+    }
+    function showToast(msg, type) { const toast = document.getElementById('toastMsg'); toast.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'} mr-2"></i> ${msg}`; toast.classList.remove('hidden'); setTimeout(() => toast.classList.add('hidden'), 3500); }
+    function toggleTheme() { document.documentElement.classList.toggle('light'); const icon = document.getElementById('themeIcon'); const text = document.getElementById('themeText'); if (document.documentElement.classList.contains('light')) { icon.className = 'fas fa-sun'; text.innerText = 'Dark Mode'; } else { icon.className = 'fas fa-moon'; text.innerText = 'Light Mode'; } }
+    function logout() { alert("Securely logged out from Bank of America Private Banking."); window.location.href = "login.html"; }
+    function openMobileSidebar() { document.getElementById('mobileSidebar').classList.add('open'); document.getElementById('overlay').classList.remove('hidden'); }
+    function closeMobileSidebar() { document.getElementById('mobileSidebar').classList.remove('open'); document.getElementById('overlay').classList.add('hidden'); }
+    window.onload = () => { updateUI(); switchSection('overview'); };
+    // Tilt effect for cards
+    document.querySelectorAll('.bank-card').forEach(card => { card.addEventListener('mousemove', (e) => { const rect = card.getBoundingClientRect(); const x = (e.clientX - rect.left)/rect.width - 0.5; const y = (e.clientY - rect.top)/rect.height - 0.5; card.style.transform = `perspective(1200px) rotateX(${y * -10}deg) rotateY(${x * 12}deg) translateY(-5px)`; }); card.addEventListener('mouseleave', () => { card.style.transform = ''; }); });
+  </script>
+
+  <!-- Tawk.to Live Chat Widget -->
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {};
+    var Tawk_LoadStart = new Date();
+    Tawk_API.visitor = { name: "John J. Irwin", email: "john.irwin@privatebanking.com" };
+    (function(){ var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0]; s1.async = true; s1.src = 'https://embed.tawk.to/6a261f7352a4351c2dc5cc5f/1jqielnhu'; s1.charset = 'UTF-8'; s1.setAttribute('crossorigin', '*'); s0.parentNode.insertBefore(s1, s0); })();
+  </script>
+</body>
+</html>

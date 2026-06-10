@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank of America • Private Banking</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(145deg, #0a0a0a, #1a1a2e);
+      color: white;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(40px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.6);
+    }
+    
+    .bank-card {
+      height: 240px;
+      border-radius: 24px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+    
+    .bank-card:hover {
+      transform: translateY(-18px) scale(1.03);
+    }
+    
+    .tilt-card {
+      transition: transform 0.12s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    
+    .visa-card { background: linear-gradient(135deg, #1f1f1f, #2a2a2a); }
+    .mastercard { background: linear-gradient(135deg, #c8102e, #f1c40f); }
+    
+    footer {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(30px);
+    }
+    
+    .light body {
+      background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+      color: #0f172a;
+    }
+    
+    .light .glass {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="fixed left-0 top-0 h-screen w-72 glass p-8 flex flex-col z-50">
+    <div class="flex items-center gap-4 mb-16">
+      <div class="w-14 h-14 bg-red-600 rounded-3xl flex items-center justify-center text-4xl font-bold">B</div>
+      <div class="font-bold text-3xl tracking-tighter">Bank of America</div>
+    </div>
+
+    <div class="flex-1 space-y-2">
+      <div onclick="switchPage(0)" class="flex items-center gap-4 px-6 py-5 rounded-3xl cursor-pointer bg-red-600 text-white">
+        <i class="fas fa-house"></i><span class="font-semibold">Overview</span>
+      </div>
+      <div onclick="switchPage(1)" class="flex items-center gap-4 px-6 py-5 rounded-3xl cursor-pointer hover:bg-white/10">
+        <i class="fas fa-receipt"></i><span>Transactions</span>
+      </div>
+      <div onclick="switchPage(2)" class="flex items-center gap-4 px-6 py-5 rounded-3xl cursor-pointer hover:bg-white/10">
+        <i class="fas fa-chart-line"></i><span>Investments</span>
+      </div>
+    </div>
+
+    <div class="pt-8 border-t border-white/10">
+      <button onclick="toggleTheme()" class="flex items-center gap-3 text-lg w-full hover:bg-white/10 rounded-3xl px-6 py-4">
+        <i id="theme-icon" class="fas fa-moon"></i>
+        <span id="theme-text">Dark Mode</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="ml-72 p-12 min-h-screen pb-32">
+
+    <div class="flex justify-between items-end mb-12">
+      <div>
+        <h1 class="text-5xl font-bold tracking-tighter">Good afternoon, Alex</h1>
+        <p class="text-zinc-400 text-xl">Your cards • Your wealth</p>
+      </div>
+      <div class="text-right">
+        <p class="text-zinc-400">NET WORTH</p>
+        <h2 class="text-6xl font-bold" id="total-balance">$18,940.34</h2>
+      </div>
+    </div>
+
+    <!-- Virtual Cards -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <!-- Visa Debit -->
+      <div class="bank-card visa-card tilt-card" onmousemove="tiltCard(this, event)" onmouseleave="resetTilt(this)">
+        <div class="flex justify-between">
+          <div>
+            <p class="text-white/70 text-sm tracking-widest">VISA DEBIT</p>
+            <p class="text-2xl font-semibold mt-8">4242 4242 4242 4242</p>
+          </div>
+          <i class="fab fa-cc-visa text-6xl text-white/90"></i>
+        </div>
+        <div class="absolute bottom-8 left-8">
+          <p class="text-white/80">ALEX RIVERA</p>
+          <p class="text-xs">09/28</p>
+        </div>
+        <div class="absolute top-8 left-8 w-16 h-10 bg-gradient-to-br from-amber-300 to-yellow-400 rounded-md"></div>
+      </div>
+
+      <!-- Mastercard -->
+      <div class="bank-card mastercard tilt-card" onmousemove="tiltCard(this, event)" onmouseleave="resetTilt(this)">
+        <div class="flex justify-between">
+          <div>
+            <p class="text-white/90 text-sm tracking-widest">MASTERCARD</p>
+            <p class="text-2xl font-semibold mt-8">8888 8888 8888 8888</p>
+          </div>
+          <i class="fab fa-cc-mastercard text-6xl text-white/90"></i>
+        </div>
+        <div class="absolute bottom-8 left-8">
+          <p class="text-white/90">ALEX RIVERA</p>
+          <p class="text-xs">12/27</p>
+        </div>
+        <div class="absolute top-8 right-8 flex gap-1">
+          <div class="w-9 h-9 bg-white/30 rounded-full"></div>
+          <div class="w-9 h-9 bg-white/30 rounded-full -ml-4"></div>
+        </div>
+        <div class="absolute top-8 left-8 w-16 h-10 bg-gradient-to-br from-amber-300 to-yellow-400 rounded-md"></div>
+      </div>
+    </div>
+
+    <!-- Account Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="glass rounded-3xl p-8 tilt-card" onmousemove="tiltCard(this, event)" onmouseleave="resetTilt(this)">
+        <i class="fas fa-piggy-bank text-4xl text-emerald-400 mb-4"></i>
+        <p class="text-zinc-400">Savings Account</p>
+        <p class="text-4xl font-bold mt-2">$8,732.45</p>
+        <p class="text-emerald-400 text-sm">4.25% APY</p>
+      </div>
+      <div class="glass rounded-3xl p-8 tilt-card" onmousemove="tiltCard(this, event)" onmouseleave="resetTilt(this)">
+        <i class="fas fa-wallet text-4xl text-blue-400 mb-4"></i>
+        <p class="text-zinc-400">Checking Account</p>
+        <p class="text-4xl font-bold mt-2">$3,421.89</p>
+      </div>
+      <div class="glass rounded-3xl p-8 tilt-card" onmousemove="tiltCard(this, event)" onmouseleave="resetTilt(this)">
+        <i class="fas fa-chart-line text-4xl text-violet-400 mb-4"></i>
+        <p class="text-zinc-400">Portfolio ROI</p>
+        <p class="text-4xl font-bold mt-2 text-emerald-400">+12.8%</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="fixed bottom-0 left-0 right-0 glass border-t border-white/10 py-8 z-50">
+    <div class="max-w-screen-2xl mx-auto px-12">
+      <div class="flex flex-wrap justify-between items-center text-sm text-zinc-400">
+        <div class="flex items-center gap-8">
+          <a href="#" class="hover:text-white transition">Security</a>
+          <a href="#" class="hover:text-white transition">Privacy</a>
+          <a href="#" class="hover:text-white transition">Terms</a>
+          <a href="#" class="hover:text-white transition">Support 24/7</a>
+        </div>
+        <div>© 2026 Bank of America Corporation. All Rights Reserved.</div>
+        <div class="flex items-center gap-4">
+          <span class="text-emerald-400">●</span> FDIC Insured • Bank-Level Security
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Transfer Button -->
+  <button onclick="showTransferModal()" 
+    class="fixed bottom-12 right-12 bg-red-600 hover:bg-red-700 w-20 h-20 rounded-3xl flex items-center justify-center text-4xl shadow-2xl transition-all hover:scale-110 z-50">
+    <i class="fas fa-paper-plane"></i>
+  </button>
+
+  <!-- Transfer Modal -->
+  <div class="modal fade" id="transferModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content glass border-0">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Secure Money Transfer</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-8">
+          <div id="step-1">
+            <button onclick="reviewTransfer()" class="btn btn-danger w-100 py-5 rounded-3xl text-xl">Start Secure Transfer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 3D Tilt Effect
+    function tiltCard(el, e) {
+      const rect = el.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      el.style.transform = `perspective(1200px) rotateX(${y * -22}deg) rotateY(${x * 28}deg)`;
+    }
+
+    function resetTilt(el) {
+      el.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg)`;
+    }
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle('light');
+      const icon = document.getElementById('theme-icon');
+      const text = document.getElementById('theme-text');
+      if (document.documentElement.classList.contains('light')) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+        text.textContent = 'Dark Mode';
+      } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+        text.textContent = 'Light Mode';
+      }
+    }
+
+    function showTransferModal() {
+      new bootstrap.Modal(document.getElementById('transferModal')).show();
+    }
+
+    function reviewTransfer() {
+      alert("✅ Transfer reviewed and completed successfully!");
+    }
+
+    function switchPage(page) {
+      alert(`Navigating to ${page} page`);
+    }
+
+    window.onload = () => {
+      console.log("%cBank of America - Complete Premium Experience", "color:#e31837; font-size:18px; font-weight:bold");
+    };
+  </script>
+</body>
+</html>

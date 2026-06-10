@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>BofA Private Banking | Elite Account Registration</title>
+  
+  <!-- Google Fonts + Tailwind + Bootstrap + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(145deg, #f0f4fc 0%, #e8edf8 100%);
+      min-height: 100vh;
+      color: #1a2634;
+    }
+    
+    /* Premium Glass Card - Blue & White Theme */
+    .premium-glass {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(59, 130, 246, 0.12);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s ease;
+    }
+    
+    /* Form Fields - Blue/White Elegance */
+    .form-field {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 0.9rem 1.25rem;
+      width: 100%;
+      transition: all 0.25s;
+      font-weight: 500;
+      color: #1a2634;
+      font-size: 0.95rem;
+    }
+    .form-field:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+      transform: translateY(-1px);
+    }
+    
+    .form-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: block;
+      color: #5b6e8c;
+    }
+    
+    /* Primary Button - Blue Gradient with Red Accent */
+    .btn-primary-premium {
+      background: linear-gradient(105deg, #1e3a8a, #1d4ed8);
+      border: none;
+      border-radius: 40px;
+      padding: 1rem 2rem;
+      font-weight: 700;
+      transition: all 0.3s;
+      color: white;
+    }
+    .btn-primary-premium:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px -8px rgba(29, 78, 216, 0.4);
+      background: linear-gradient(105deg, #1e40af, #2563eb);
+    }
+    
+    /* Red Accent Button for certain actions */
+    .btn-red-accent {
+      background: linear-gradient(105deg, #dc2626, #b91c1c);
+      border: none;
+      border-radius: 40px;
+      padding: 0.85rem 1.8rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      color: white;
+    }
+    .btn-red-accent:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -8px rgba(220, 38, 38, 0.4);
+    }
+    
+    .btn-secondary-outline {
+      background: transparent;
+      border: 1px solid #cbd5e1;
+      border-radius: 40px;
+      padding: 0.85rem 1.8rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #334155;
+    }
+    .btn-secondary-outline:hover {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.05);
+    }
+    
+    /* Step Bubbles - Blue Theme */
+    .step-bubble {
+      width: 52px;
+      height: 52px;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.4rem;
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+      background: white;
+      border: 2px solid #e2e8f0;
+      color: #5b6e8c;
+    }
+    .step-active {
+      background: #1e3a8a;
+      border-color: #3b82f6;
+      color: white;
+      transform: scale(1.08);
+      box-shadow: 0 8px 20px -6px rgba(30, 58, 138, 0.3);
+    }
+    .step-completed {
+      background: #10b981;
+      border-color: #34d399;
+      color: white;
+    }
+    
+    /* Card Design Options */
+    .card-option {
+      transition: all 0.2s;
+      cursor: pointer;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 1rem;
+    }
+    .card-option:hover {
+      transform: translateY(-3px);
+      border-color: #3b82f6;
+      box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.08);
+    }
+    .card-option.selected {
+      border-color: #1e3a8a;
+      background: linear-gradient(145deg, #f8fafc, #eff6ff);
+    }
+    
+    /* Review Rows */
+    .review-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid #eef2f6;
+    }
+    
+    /* Animation */
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(24px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .fade-slide { animation: fadeSlideUp 0.5s ease-out forwards; }
+    
+    /* Red accent highlights */
+    .red-accent-text { color: #dc2626; }
+    .red-accent-border { border-color: #dc2626; }
+    .bg-red-soft { background: rgba(220, 38, 38, 0.05); }
+    
+    /* Floating orbs background */
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    /* Select, input styling */
+    select.form-field, input.form-field {
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%236b7280"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Orbs -->
+  <div class="bg-orb w-[500px] h-[500px] bg-blue-200/40 -top-40 -right-40"></div>
+  <div class="bg-orb w-[400px] h-[400px] bg-red-100/30 bottom-20 left-0"></div>
+  <div class="bg-orb w-[300px] h-[300px] bg-blue-300/20 top-1/2 left-1/2 -translate-x-1/2"></div>
+
+  <!-- Top Navigation -->
+  <div class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-blue-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 bg-gradient-to-br from-blue-800 to-blue-600 rounded-2xl flex items-center justify-center text-xl font-black shadow-md">B</div>
+        <div>
+          <span class="font-bold text-xl tracking-tight text-slate-800">Bank of America</span>
+          <span class="hidden md:inline-block ml-2 text-[9px] font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full tracking-wider border border-blue-200">PRIVATE CLIENT SUITE</span>
+        </div>
+      </div>
+      <div class="flex gap-3 items-center">
+        <div class="hidden lg:flex text-xs gap-3 text-slate-500"><i class="fas fa-headset text-blue-600"></i> 24/7 Priority Line</div>
+        <a href="#" class="text-sm text-slate-600 hover:text-blue-700 transition"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="relative z-10 pt-28 pb-20 px-5 md:px-8 max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-14 fade-slide">
+      <div class="inline-flex items-center gap-2 bg-blue-50 premium-glass px-5 py-2 rounded-full text-sm mb-5 border border-blue-200">
+        <i class="fas fa-gem text-blue-700"></i> <span class="font-semibold text-slate-700">PREMIUM WEALTH MANAGEMENT</span>
+      </div>
+      <h1 class="text-5xl md:text-7xl font-black tracking-tighter mb-5 bg-gradient-to-r from-slate-800 via-blue-700 to-slate-800 bg-clip-text text-transparent">Open an Elite Account</h1>
+      <p class="text-slate-500 max-w-2xl mx-auto text-lg">Access dedicated advisors, premium rewards, and global wealth solutions.</p>
+    </div>
+
+    <!-- Stepper -->
+    <div class="max-w-3xl mx-auto mb-14">
+      <div class="relative flex justify-between items-center">
+        <div class="absolute top-6 left-0 right-0 h-[2px] bg-blue-100 rounded-full"></div>
+        <div id="stepProgressFill" class="absolute top-6 left-0 h-[2px] bg-gradient-to-r from-blue-600 to-blue-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+        
+        <div class="step-item z-10 flex flex-col items-center gap-2 w-1/3">
+          <div id="step1Badge" class="step-bubble">1</div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Identity</span>
+        </div>
+        <div class="step-item z-10 flex flex-col items-center gap-2 w-1/3">
+          <div id="step2Badge" class="step-bubble">2</div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Financial</span>
+        </div>
+        <div class="step-item z-10 flex flex-col items-center gap-2 w-1/3">
+          <div id="step3Badge" class="step-bubble">3</div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Verify</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Panel -->
+    <div class="premium-glass rounded-3xl p-6 md:p-10 shadow-xl border border-white/50 fade-slide">
+      <form id="accountForm" onsubmit="handleFinalSubmit(event)">
+        
+        <!-- STEP 1 - Personal Information -->
+        <div id="stepPanel1" class="step-panel transition-all duration-300">
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="md:col-span-2"><label class="form-label"><i class="fas fa-user-circle text-blue-600 mr-1"></i> FULL LEGAL NAME</label><input type="text" class="form-field" id="fullName" placeholder="e.g., James Alexander Morgan" required></div>
+            <div><label class="form-label">DATE OF BIRTH</label><input type="date" class="form-field" id="dob" required></div>
+            <div><label class="form-label">GENDER</label><select class="form-field" id="gender"><option>Male</option><option>Female</option><option>Non-binary</option><option>Prefer not to say</option></select></div>
+            <div><label class="form-label">EMAIL ADDRESS</label><input type="email" class="form-field" id="email" placeholder="james.morgan@wealth.com" required></div>
+            <div><label class="form-label">MOBILE NUMBER</label><input type="tel" class="form-field" id="phone" placeholder="+1 (212) 555 8901" required></div>
+            <div class="md:col-span-2"><label class="form-label">RESIDENTIAL ADDRESS</label><input type="text" class="form-field" id="address" placeholder="Street / Building / Suite" required></div>
+            <div><input type="text" class="form-field" id="city" placeholder="City" required></div>
+            <div><select class="form-field" id="state" required><option value="">State</option><option>New York</option><option>California</option><option>Texas</option><option>Florida</option><option>Illinois</option><option>Washington</option></select></div>
+            <div><input type="text" class="form-field" id="zip" placeholder="ZIP Code" required></div>
+            <div><input type="text" class="form-field" id="ssn" placeholder="SSN / ITIN (last 4 digits)" required></div>
+          </div>
+          <div class="mt-10 flex justify-end"><button type="button" onclick="goToStep(2)" class="btn-primary-premium text-white px-8 py-3 rounded-full font-semibold flex items-center gap-2">Continue <i class="fas fa-arrow-right text-sm"></i></button></div>
+        </div>
+
+        <!-- STEP 2 - Financial & Account Preferences -->
+        <div id="stepPanel2" class="step-panel hidden transition-all duration-300">
+          <div class="grid md:grid-cols-2 gap-5">
+            <div><label class="form-label"><i class="fas fa-briefcase"></i> ACCOUNT PACKAGE</label><select class="form-field" id="accountPackage" required><option value="">Select Tier</option><option>Signature Private Wealth</option><option>Platinum Premium</option><option>Elite Business Advantage</option></select></div>
+            <div><label class="form-label"><i class="fas fa-dollar-sign"></i> INITIAL FUNDING</label><select class="form-field" id="initialFunding" required><option>$50,000 – $249,999</option><option>$250,000 – $999,999</option><option>$1,000,000+ (Family Office)</option></select></div>
+            <div><label class="form-label"><i class="fas fa-chart-line"></i> OCCUPATION / TITLE</label><input type="text" class="form-field" id="occupation" placeholder="Executive / Founder / Principal" required></div>
+            <div><label class="form-label"><i class="fas fa-coins"></i> ANNUAL INCOME</label><select class="form-field" id="annualIncome"><option>$200k - $500k</option><option>$500k - $1.5M</option><option>$1.5M+</option></select></div>
+            <div class="md:col-span-2"><label class="form-label"><i class="fas fa-credit-card"></i> PREFERRED CARD DESIGN</label>
+              <div class="grid grid-cols-3 gap-4 mt-2">
+                <label class="card-option flex flex-col items-center gap-2 cursor-pointer transition" data-card="visa"><input type="radio" name="cardStyle" value="Visa Infinite" hidden class="peer"> <i class="fab fa-cc-visa text-4xl text-blue-700"></i> <span class="text-xs font-semibold">Visa Infinite</span></label>
+                <label class="card-option flex flex-col items-center gap-2 cursor-pointer transition" data-card="mastercard"><input type="radio" name="cardStyle" value="Mastercard Black" hidden> <i class="fab fa-cc-mastercard text-4xl text-red-500"></i> <span class="text-xs font-semibold">World Elite</span></label>
+                <label class="card-option flex flex-col items-center gap-2 cursor-pointer transition" data-card="amex"><input type="radio" name="cardStyle" value="Amex Centurion" hidden> <i class="fab fa-cc-amex text-4xl text-blue-500"></i> <span class="text-xs font-semibold">Centurion</span></label>
+              </div>
+            </div>
+            <div class="md:col-span-2"><label class="form-label"><i class="fas fa-hand-holding-heart red-accent-text"></i> BENEFICIARY (Optional)</label><input type="text" class="form-field" id="beneficiary" placeholder="Full name & relationship"></div>
+            <div class="md:col-span-2 bg-red-soft rounded-xl p-3 text-xs text-slate-600 flex items-center gap-2"><i class="fas fa-shield-alt text-red-500"></i> Your assets are protected with advanced security and FDIC insurance up to $250k.</div>
+          </div>
+          <div class="mt-10 flex justify-between"><button type="button" onclick="goToStep(1)" class="btn-secondary-outline"><i class="fas fa-arrow-left mr-2"></i>Back</button><button type="button" onclick="goToStep(3)" class="btn-primary-premium text-white px-8 py-3 rounded-full font-semibold">Review Application</button></div>
+        </div>
+
+        <!-- STEP 3 - Verification & Summary -->
+        <div id="stepPanel3" class="step-panel hidden transition-all duration-300">
+          <div class="bg-blue-50/50 rounded-2xl p-6 mb-6 border border-blue-100">
+            <h3 class="text-xl font-bold flex items-center gap-2 mb-4 text-slate-800"><i class="fas fa-clipboard-list text-blue-700"></i> Application Summary</h3>
+            <div id="reviewContainer" class="space-y-1"></div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-5 mt-4">
+            <div><label class="form-label"><i class="fas fa-id-card"></i> GOVERNMENT ID TYPE</label><select class="form-field" id="idType" required><option>Driver's License</option><option>Passport</option><option>National ID</option></select></div>
+            <div><label class="form-label"><i class="fas fa-qrcode"></i> ID NUMBER / PASSPORT</label><input type="text" class="form-field" id="idNumber" placeholder="Document reference" required></div>
+          </div>
+          <div class="mt-6 p-5 premium-glass rounded-2xl flex items-start gap-4 border border-blue-200">
+            <input type="checkbox" id="termsAgree" class="w-5 h-5 mt-0.5 accent-blue-700" required>
+            <label for="termsAgree" class="text-sm leading-relaxed text-slate-700">I certify under penalty of perjury that all information is accurate. I authorize verification of identity and accept the <span class="font-bold text-blue-700">Electronic Disclosure & Account Terms</span>.</label>
+          </div>
+          <div class="mt-8 flex justify-between"><button type="button" onclick="goToStep(2)" class="btn-secondary-outline"><i class="fas fa-arrow-left mr-2"></i>Back</button><button type="submit" class="btn-red-accent text-white px-10 py-3 rounded-full font-bold flex items-center gap-2"><i class="fas fa-lock"></i> Submit Application</button></div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Trust Badges -->
+    <div class="flex flex-wrap justify-center gap-8 mt-12 text-center text-xs font-medium text-slate-500">
+      <div class="flex items-center gap-2"><i class="fas fa-shield-alt text-blue-600"></i> FDIC Insured</div>
+      <div class="flex items-center gap-2"><i class="fas fa-laptop-code text-blue-600"></i> 256-bit Encryption</div>
+      <div class="flex items-center gap-2"><i class="fas fa-clock text-blue-600"></i> 24h Approval Process</div>
+      <div class="flex items-center gap-2"><i class="fas fa-concierge-bell text-red-500"></i> Global Concierge</div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-3xl border-0 shadow-2xl" style="background: white;">
+        <div class="modal-body p-8 text-center">
+          <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg"><i class="fas fa-check text-white text-3xl"></i></div>
+          <h3 class="text-2xl font-black text-slate-800">Welcome to Private Banking</h3>
+          <p class="mt-2 text-slate-500">Your application is under review. A relationship manager will reach out within 24 hours.</p>
+          <div class="bg-slate-100 rounded-xl p-3 mt-4 font-mono text-sm text-slate-700">Ref: <span id="refNumber" class="text-blue-700 font-bold">BOA-PVT-</span></div>
+          <button class="mt-6 bg-blue-700 text-white px-6 py-2 rounded-full hover:bg-blue-800 transition" data-bs-dismiss="modal">Continue to Dashboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    const panels = {1: document.getElementById('stepPanel1'), 2: document.getElementById('stepPanel2'), 3: document.getElementById('stepPanel3')};
+    const badges = {1: document.getElementById('step1Badge'), 2: document.getElementById('step2Badge'), 3: document.getElementById('step3Badge')};
+    const progressFill = document.getElementById('stepProgressFill');
+
+    function updateUI() {
+      for (let i = 1; i <= 3; i++) {
+        badges[i].classList.remove('step-active', 'step-completed');
+        if (i < currentStep) { badges[i].classList.add('step-completed'); badges[i].innerHTML = '<i class="fas fa-check text-sm"></i>'; }
+        else if (i === currentStep) { badges[i].classList.add('step-active'); badges[i].innerHTML = i; }
+        else { badges[i].innerHTML = i; }
+        panels[i].classList.add('hidden');
+      }
+      panels[currentStep].classList.remove('hidden');
+      const percent = ((currentStep - 1) / 2) * 100;
+      progressFill.style.width = `${percent}%`;
+    }
+
+    function validateStep1() {
+      const required = ['fullName', 'dob', 'email', 'phone', 'address', 'city', 'state', 'zip', 'ssn'];
+      for (let id of required) if (!document.getElementById(id).value.trim()) { alert('Please complete all personal information fields.'); return false; }
+      const email = document.getElementById('email').value;
+      if (!email.includes('@')) { alert('Valid email required'); return false; }
+      const dob = new Date(document.getElementById('dob').value);
+      if ((new Date() - dob) / 31536000000 < 18) { alert('You must be 18+ to open an account'); return false; }
+      return true;
+    }
+    function validateStep2() { 
+      if (!document.getElementById('accountPackage').value || !document.getElementById('initialFunding').value) { 
+        alert('Please select account package and initial funding range'); 
+        return false; 
+      } 
+      return true; 
+    }
+
+    function goToStep(step) {
+      if (step === 2 && !validateStep1()) return;
+      if (step === 3 && !validateStep2()) return;
+      currentStep = step;
+      updateUI();
+      if (step === 3) generateReview();
+    }
+
+    function generateReview() {
+      const full = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const pkg = document.getElementById('accountPackage').value;
+      const funding = document.getElementById('initialFunding').value;
+      const occupation = document.getElementById('occupation').value;
+      const income = document.getElementById('annualIncome').value;
+      const address = `${document.getElementById('address').value}, ${document.getElementById('city').value}, ${document.getElementById('state').value}`;
+      const cardRadios = document.querySelectorAll('input[name="cardStyle"]');
+      let cardValue = "Visa Infinite";
+      for (let r of cardRadios) if (r.checked) { cardValue = r.value; break; }
+      const reviewDiv = document.getElementById('reviewContainer');
+      reviewDiv.innerHTML = `
+        <div class="review-row"><span class="text-slate-500">Full Name</span><span class="font-semibold text-slate-800">${full}</span></div>
+        <div class="review-row"><span class="text-slate-500">Contact</span><span>${email} | ${phone}</span></div>
+        <div class="review-row"><span class="text-slate-500">Account Plan</span><span class="font-bold text-blue-700">${pkg}</span></div>
+        <div class="review-row"><span class="text-slate-500">Funding / Income</span><span>${funding} • ${income}</span></div>
+        <div class="review-row"><span class="text-slate-500">Occupation</span><span>${occupation}</span></div>
+        <div class="review-row"><span class="text-slate-500">Card Preference</span><span><i class="fab fa-cc-${cardValue.includes('Visa')?'visa':cardValue.includes('Master')?'mastercard':'amex'}"></i> ${cardValue}</span></div>
+        <div class="review-row"><span class="text-slate-500">Residence</span><span>${address}</span></div>
+      `;
+    }
+
+    function handleFinalSubmit(e) {
+      e.preventDefault();
+      if (!document.getElementById('termsAgree').checked) { alert('You must accept the Terms & Conditions.'); return; }
+      if (!document.getElementById('idType').value || !document.getElementById('idNumber').value.trim()) { alert('Please provide government ID details for verification.'); return; }
+      const refCode = 'BOA-' + Math.floor(100000 + Math.random() * 900000) + '-ELITE';
+      document.getElementById('refNumber').innerHTML = refCode;
+      const modal = new bootstrap.Modal(document.getElementById('successModal'));
+      modal.show();
+      setTimeout(() => { 
+        document.getElementById('accountForm').reset(); 
+        currentStep = 1; 
+        updateUI(); 
+      }, 1500);
+    }
+
+    // Card selection styling
+    document.querySelectorAll('.card-option').forEach(opt => {
+      opt.addEventListener('click', function() {
+        const radio = this.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+        document.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+
+    window.onload = () => {
+      updateUI();
+      // Set default card selection
+      document.querySelector('.card-option').classList.add('selected');
+      if(document.querySelector('.card-option input')) document.querySelector('.card-option input').checked = true;
+    };
+    window.goToStep = goToStep; 
+    window.handleFinalSubmit = handleFinalSubmit;
+  </script>
+</body>
+</html>

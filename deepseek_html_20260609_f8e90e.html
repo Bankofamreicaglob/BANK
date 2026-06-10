@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Bank of America | Private Banking Login</title>
+  
+  <!-- Favicon (Bank of America style) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23e31837'/%3E%3Cpath d='M50 20 L65 45 L50 70 L35 45 Z' fill='%23ffffff' opacity='0.95'/%3E%3Ccircle cx='50' cy='45' r='8' fill='%230a2351'/%3E%3C/svg%3E">
+  
+  <!-- Tailwind CSS + Font Awesome + Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at 10% 20%, #0a2351, #030c1a);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    /* Animated Gradient Overlay */
+    .animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: linear-gradient(125deg, #0a2351 0%, #0e2a5e 40%, #b91c2c 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 12s ease infinite;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Floating Particles */
+    .particle {
+      position: fixed;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: floatParticle 18s infinite alternate ease-in-out;
+      z-index: -1;
+    }
+    @keyframes floatParticle {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+      100% { transform: translate(40px, -40px) scale(1.3); opacity: 0.5; }
+    }
+    
+    /* Glassmorphic Card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 2rem;
+      box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 40px 60px -20px rgba(0, 0, 0, 0.4);
+    }
+    
+    /* Input Fields */
+    .input-premium {
+      transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1.5px solid #e2e8f0;
+      border-radius: 1.2rem;
+    }
+    .input-premium:focus {
+      border-color: #e31837;
+      box-shadow: 0 0 0 4px rgba(227, 24, 55, 0.15);
+      transform: scale(1.01);
+      background: white;
+    }
+    
+    /* CTA Button */
+    .btn-login {
+      background: linear-gradient(95deg, #e31837, #b0102a);
+      transition: all 0.3s;
+      box-shadow: 0 10px 20px -5px rgba(227, 24, 55, 0.4);
+    }
+    .btn-login:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 30px -8px rgba(227, 24, 55, 0.6);
+      filter: brightness(1.05);
+    }
+    .btn-login:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    /* Shake Animation for Error */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+    .shake {
+      animation: shake 0.3s ease-in-out 0s 2;
+    }
+    
+    /* Toast Notification */
+    .toast {
+      animation: slideUp 0.3s ease forwards;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 640px) {
+      .glass-card { margin: 0 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated Background & Particles -->
+  <div class="animated-bg"></div>
+  <div class="particle" style="width: 300px; height: 300px; top: -80px; left: -60px;"></div>
+  <div class="particle" style="width: 450px; height: 450px; bottom: -100px; right: -80px; animation-duration: 22s;"></div>
+  <div class="particle" style="width: 200px; height: 200px; top: 40%; left: 70%; animation-duration: 14s;"></div>
+
+  <!-- Main Content -->
+  <div class="min-h-screen flex items-center justify-center p-5">
+    <div class="w-full max-w-md">
+      <!-- Logo & Brand -->
+      <div class="text-center mb-8">
+        <div class="flex justify-center mb-3">
+          <div class="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-xl border border-white/20">
+            <i class="fas fa-landmark text-white text-3xl"></i>
+          </div>
+        </div>
+        <h1 class="text-3xl font-black text-white tracking-tight drop-shadow-lg">Bank of America</h1>
+        <p class="text-white/80 text-sm mt-1">Private Banking · Secure Access</p>
+      </div>
+
+      <!-- Login Card -->
+      <div class="glass-card p-6 md:p-8">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-[#0a2351]">Welcome Back</h2>
+          <p class="text-gray-500 text-sm mt-1">Sign in to your private dashboard</p>
+        </div>
+
+        <form id="loginForm">
+          <!-- Email / Username Field -->
+          <div class="mb-5">
+            <label class="block text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
+              <i class="fas fa-user-circle text-[#e31837] mr-1"></i> Email or Username
+            </label>
+            <div class="relative">
+              <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+              <input type="text" id="loginId" class="input-premium w-full pl-11 pr-4 py-3.5 focus:outline-none" placeholder="kartmario800@gmail.com or John_irwin" autocomplete="username">
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="mb-5">
+            <label class="block text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
+              <i class="fas fa-lock text-[#e31837] mr-1"></i> Password
+            </label>
+            <div class="relative">
+              <i class="fas fa-key absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+              <input type="password" id="loginPassword" class="input-premium w-full pl-11 pr-12 py-3.5 focus:outline-none" placeholder="••••••••" autocomplete="current-password">
+              <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#e31837] transition">
+                <i class="fas fa-eye-slash"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me & Forgot -->
+          <div class="flex justify-between items-center mb-8">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="rememberCheckbox" class="w-4 h-4 rounded border-gray-300 text-[#e31837] focus:ring-[#e31837]">
+              <span class="text-sm text-gray-600">Remember me</span>
+            </label>
+            <a href="#" id="forgotLink" class="text-sm font-semibold text-[#e31837] hover:text-[#0a2351] transition">Forgot password?</a>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="signInBtn" class="btn-login w-full text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all">
+            <i class="fas fa-arrow-right-to-bracket"></i>
+            <span>Sign In</span>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="relative my-7">
+          <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+          <div class="relative flex justify-center text-xs"><span class="px-3 bg-white text-gray-400">Secure Connection</span></div>
+        </div>
+
+        <!-- Quick Access Options -->
+        <div class="grid grid-cols-2 gap-3">
+          <button id="biometricBtn" class="py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-600 text-sm font-medium flex items-center justify-center gap-2 hover:border-[#e31837] hover:text-[#e31837] transition">
+            <i class="fas fa-fingerprint text-lg"></i> Biometric
+          </button>
+          <button id="qrBtn" class="py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-600 text-sm font-medium flex items-center justify-center gap-2 hover:border-[#e31837] hover:text-[#e31837] transition">
+            <i class="fas fa-qrcode text-lg"></i> QR Code
+          </button>
+        </div>
+
+        <!-- Register Link -->
+        <p class="text-center text-sm text-gray-500 mt-8">
+          New to Private Banking?
+          <a href="#" id="registerLink" class="font-bold text-[#e31837] hover:text-[#0a2351] transition">Open an account →</a>
+        </p>
+      </div>
+
+      <!-- Security Footer -->
+      <div class="text-center mt-6 text-white/60 text-xs flex justify-center gap-5">
+        <span><i class="fas fa-shield-alt text-white/80"></i> 256-bit SSL</span>
+        <span><i class="fas fa-laptop-code"></i> PCI Compliant</span>
+        <span><i class="fas fa-clock"></i> Auto-logout</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal (Mock) -->
+  <div id="forgotModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+    <div class="bg-white rounded-2xl max-w-md w-full mx-4 p-6 shadow-2xl transform transition-all">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-[#0a2351]">Reset Password</h3>
+        <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+      </div>
+      <p class="text-gray-600 text-sm mb-4">Enter your registered email to receive a secure reset link.</p>
+      <input type="email" id="resetEmail" class="w-full border border-gray-200 rounded-xl p-3 mb-4 focus:border-[#e31837] focus:ring-0" placeholder="your@email.com">
+      <button id="sendResetBtn" class="w-full bg-[#e31837] text-white py-3 rounded-xl font-semibold hover:bg-[#c0102a] transition">Send Reset Link</button>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none"></div>
+
+  <script>
+    // ---------- HARDCODED CREDENTIALS ----------
+    const VALID_EMAIL = "kartmario800@gmail.com";
+    const VALID_USERNAME = "John_irwin";
+    const VALID_PASSWORD = "Johnjwin01";   // case-sensitive as given
+
+    // DOM elements
+    const loginIdInput = document.getElementById('loginId');
+    const passwordInput = document.getElementById('loginPassword');
+    const toggleBtn = document.getElementById('togglePassword');
+    const loginForm = document.getElementById('loginForm');
+    const signInBtn = document.getElementById('signInBtn');
+    const forgotLink = document.getElementById('forgotLink');
+    const registerLink = document.getElementById('registerLink');
+    const biometricBtn = document.getElementById('biometricBtn');
+    const qrBtn = document.getElementById('qrBtn');
+    const forgotModal = document.getElementById('forgotModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const sendResetBtn = document.getElementById('sendResetBtn');
+    const rememberCheckbox = document.getElementById('rememberCheckbox');
+    const toastContainer = document.getElementById('toastContainer');
+
+    // Helper: Toast notifications
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast bg-white rounded-xl px-5 py-3 shadow-xl border-l-4 mb-3 flex items-center gap-2 text-sm font-medium pointer-events-auto ${
+        type === 'error' ? 'border-red-500 text-red-700' : type === 'success' ? 'border-green-500 text-green-700' : 'border-[#e31837] text-[#0a2351]'
+      }`;
+      toast.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-triangle' : type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> ${message}`;
+      toastContainer.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+
+    // Password visibility
+    let isPasswordVisible = false;
+    toggleBtn.addEventListener('click', () => {
+      isPasswordVisible = !isPasswordVisible;
+      passwordInput.type = isPasswordVisible ? 'text' : 'password';
+      toggleBtn.innerHTML = isPasswordVisible ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    // Load saved login ID if "Remember Me" was previously checked
+    if (localStorage.getItem('savedLoginId')) {
+      loginIdInput.value = localStorage.getItem('savedLoginId');
+      rememberCheckbox.checked = true;
+    }
+
+    // Authentication validation (strict)
+    function validateCredentials(inputId, password) {
+      const trimmedId = inputId.trim();
+      const isEmailMatch = (trimmedId === VALID_EMAIL);
+      const isUsernameMatch = (trimmedId === VALID_USERNAME);
+      const isPasswordMatch = (password === VALID_PASSWORD);
+      return ( (isEmailMatch || isUsernameMatch) && isPasswordMatch );
+    }
+
+    // Form submit handler
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const loginId = loginIdInput.value;
+      const password = passwordInput.value;
+
+      if (!loginId || !password) {
+        showToast('❌ Please enter both email/username and password', 'error');
+        document.querySelector('.glass-card').classList.add('shake');
+        setTimeout(() => document.querySelector('.glass-card').classList.remove('shake'), 500);
+        return;
+      }
+
+      const isValid = validateCredentials(loginId, password);
+
+      if (!isValid) {
+        showToast('⛔ Access denied: Invalid credentials. Please use the authorized account.', 'error');
+        // Shake effect
+        document.querySelector('.glass-card').classList.add('shake');
+        setTimeout(() => document.querySelector('.glass-card').classList.remove('shake'), 500);
+        // Clear password field for security
+        passwordInput.value = '';
+        return;
+      }
+
+      // Save login ID if "Remember Me" is checked
+      if (rememberCheckbox.checked) {
+        localStorage.setItem('savedLoginId', loginId);
+      } else {
+        localStorage.removeItem('savedLoginId');
+      }
+
+      // Success
+      showToast('✅ Authentication successful! Redirecting to your dashboard...', 'success');
+      
+      // Disable button and show loading
+      signInBtn.disabled = true;
+      signInBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting...';
+      
+      // Redirect to account.html after 1.2 seconds
+      setTimeout(() => {
+        window.location.href = "account.html";
+      }, 1200);
+    });
+
+    // Forgot Password modal handlers
+    forgotLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      forgotModal.classList.remove('hidden');
+      forgotModal.classList.add('flex');
+    });
+    function closeModal() {
+      forgotModal.classList.add('hidden');
+      forgotModal.classList.remove('flex');
+    }
+    closeModalBtn.addEventListener('click', closeModal);
+    forgotModal.addEventListener('click', (e) => {
+      if (e.target === forgotModal) closeModal();
+    });
+    sendResetBtn.addEventListener('click', () => {
+      const resetEmail = document.getElementById('resetEmail').value.trim();
+      if (!resetEmail) {
+        showToast('Please enter your email address', 'error');
+        return;
+      }
+      showToast(`📧 If the email matches our records, a reset link has been sent.`, 'success');
+      closeModal();
+      document.getElementById('resetEmail').value = '';
+    });
+
+    // Register link (informational)
+    registerLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showToast('Private banking accounts are by invitation only. Please contact your relationship manager.', 'info');
+    });
+
+    // Biometric mock: auto-fill hardcoded credentials
+    biometricBtn.addEventListener('click', () => {
+      showToast('🔐 Biometric authentication requested. Simulating Face ID verification...', 'info');
+      setTimeout(() => {
+        loginIdInput.value = VALID_EMAIL;
+        passwordInput.value = VALID_PASSWORD;
+        showToast('✅ Biometric verified. Click "Sign In" to continue.', 'success');
+      }, 1000);
+    });
+
+    // QR Code mock
+    qrBtn.addEventListener('click', () => {
+      showToast('📱 Scan the QR code using the Bank of America Mobile App for instant login.', 'info');
+    });
+
+    // Pre-fill demo (optional, but user-friendly)
+    // Not auto-submitting, just placeholder
+  </script>
+
+  <!-- Tawk.to Live Chat Widget -->
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {};
+    var Tawk_LoadStart = new Date();
+    Tawk_API.visitor = { name: "Bank of America Client", email: "client@privatebanking.com" };
+    (function(){
+      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/6a261f7352a4351c2dc5cc5f/1jqielnhu';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  </script>
+
+  <!-- Floating Support Badge -->
+  <div class="fixed bottom-6 left-6 z-40 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-md text-xs font-medium text-[#0a2351] border border-gray-200 pointer-events-none hidden lg:flex items-center gap-2">
+    <i class="fas fa-headset text-[#e31837] animate-pulse"></i> Live support 24/7
+  </div>
+</body>
+</html>
